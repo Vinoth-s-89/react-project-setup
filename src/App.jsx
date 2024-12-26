@@ -5,9 +5,31 @@ import Popover from "./components/shared/Popover";
 const menuItems = [
   {
     label: "Item -1",
+    menuItems: [
+      {
+        label: "Inner Item -1",
+      },
+      {
+        label: "Inner Item -2",
+      },
+      {
+        label: "Inner Item -3",
+      },
+    ],
   },
   {
     label: "Item -2",
+    menuItems: [
+      {
+        label: "Inner Item -1",
+      },
+      {
+        label: "Inner Item -2",
+      },
+      {
+        label: "Inner Item -3",
+      },
+    ],
   },
   {
     label: "Item -3",
@@ -34,6 +56,7 @@ function App() {
       <button ref={elementRef} onClick={handleOpen}>
         Click Here
       </button>
+      <div>Content</div>
       <Popover
         open={open}
         elementRef={elementRef}

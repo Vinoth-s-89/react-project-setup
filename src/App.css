@@ -4,15 +4,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .popover {
-  width: 200px;
+  width: auto;
+  min-width: 150px;
+  max-width: 200px;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   position: absolute;
   background: #f5f5f5;
-  padding: 10px;
+  border-radius: 5px;
+  z-index: 5;
 }
 
 .menu-item:hover {
@@ -22,4 +26,20 @@
 .menu-item {
   padding: 5px;
   cursor: pointer;
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.menu-item svg {
+  fill: #000;
+  height: 14px;
+  width: 14px;
+}
+
+.menu-item .label {
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
