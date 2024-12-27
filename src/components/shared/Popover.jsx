@@ -14,55 +14,80 @@ const icons = {
   ),
 };
 
-const Popover = ({ open, elementRef, onClose, menuItems = [] }) => {
+const Popover = ({
+  open,
+  elementRef,
+  onClose,
+  menuItems = [],
+  isNested = false,
+}) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [innerMenuOpen, setInnerMenuOpen] = useState(false);
-  const [innerMenuItems, setInnerMenuItems] = useState(null);
+  const [innerProps, setInnerProps] = useState({
+    open: false,
+    menuItems: null,
+  });
   const popoverRef = useRef(null);
   const innerRef = useRef(null);
 
-  const handleInnerMenuOpen = useCallback((event, innerItems) => {
+  const handleInnerMenuOpen = useCallback((event, menuItems) => {
+    event.stopPropagation();
     innerRef.current = event.currentTarget;
-    setInnerMenuOpen(true);
-    setInnerMenuItems(innerItems);
+    setInnerProps({ open: true, menuItems });
   }, []);
 
   const handleInnerMenuClose = useCallback(() => {
-    setInnerMenuOpen(false);
+    setInnerProps({ open: true, menuItems: null });
+    innerRef.current = null;
   }, []);
 
-  useEffect(() => {
-    document.addEventListener("click", (event) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target))
-        onClose();
-    });
-    return () =>
-      document.removeEventListener("click", () => {
-        onClose();
-      });
-  }, [onClose]);
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+  //       onClose();
+  //     }
+  //   };
+
+  //   document.addEventListener("click", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside);
+  //   };
+  // }, [onClose]);
 
   useEffect(() => {
-    if (elementRef) {
-      const rect = elementRef?.current?.getBoundingClientRect();
-      setPosition({ x: rect.x, y: rect.y });
+    if (elementRef?.current && open) {
+      const rect = elementRef.current.getBoundingClientRect();
+      setPosition({ x: isNested ? rect.width + 5 : rect.x, y: rect.y });
     }
-  }, [elementRef, open]);
+    if (!open || !elementRef.current) {
+      setInnerProps({ open: false, menuItems: null });
+      innerRef.current = null;
+    }
+  }, [elementRef, open, onClose, isNested]);
 
-  console.log({ open, elementRef, menuItems, innerRef });
+  useEffect(() => {
+    const handleResize = () => {
+      const rect = elementRef.current.getBoundingClientRect();
+      setPosition({ x: isNested ? rect.width + 5 : rect.x, y: rect.y });
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [elementRef, isNested]);
 
   if (!open) return null;
 
   return (
     <div
       style={{
-        top: position.y + 25,
+        top: isNested ? 0 : position.y + 25,
         left: position.x,
       }}
       className="popover"
       ref={popoverRef}
     >
-      {menuItems.map(({ label = "", index, menuItems: innerMenus }) => (
+      {menuItems.map(({ label, menuItems: innerMenus }, index) => (
         <div
           key={label + index}
           className="menu-item"
@@ -74,13 +99,14 @@ const Popover = ({ open, elementRef, onClose, menuItems = [] }) => {
           {innerMenus && <div>{icons.forward}</div>}
         </div>
       ))}
-      {innerMenuOpen && (
+      {innerProps?.open && innerProps?.menuItems && innerRef && (
         <Popover
-          open={innerMenuOpen}
+          open={innerProps?.open}
           elementRef={innerRef}
           onClose={handleInnerMenuClose}
-          menuItems={innerMenuItems}
-          key={innerMenuItems?.[0]?.label || "Default"}
+          menuItems={innerProps.menuItems}
+          key={`${"Default"}-${Math.random()}`}
+          isNested
         />
       )}
     </div>

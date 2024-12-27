@@ -7,13 +7,35 @@ const menuItems = [
     label: "Item -1",
     menuItems: [
       {
-        label: "Inner Item -1",
+        label: "1st Inner Item -1",
+        menuItems: [
+          {
+            label: "1st Inner Item -1",
+          },
+          {
+            label: "1st Inner Item -2",
+          },
+          {
+            label: "1st Inner Item -3",
+            menuItems: [
+              {
+                label: "1st Inner Item -1",
+              },
+              {
+                label: "1st Inner Item -2",
+              },
+              {
+                label: "1st Inner Item -3",
+              },
+            ],
+          },
+        ],
       },
       {
-        label: "Inner Item -2",
+        label: "1st Inner Item -2",
       },
       {
-        label: "Inner Item -3",
+        label: "1st Inner Item -3",
       },
     ],
   },
@@ -21,13 +43,13 @@ const menuItems = [
     label: "Item -2",
     menuItems: [
       {
-        label: "Inner Item -1",
+        label: "2nd Inner Item -1",
       },
       {
-        label: "Inner Item -2",
+        label: "2nd Inner Item -2",
       },
       {
-        label: "Inner Item -3",
+        label: "2nd Inner Item -3",
       },
     ],
   },
@@ -46,16 +68,18 @@ function App() {
     (event) => {
       event.stopPropagation();
       setOpen(!open);
+      elementRef.current = event.currentTarget;
     },
     [open]
   );
-  const handleClose = useCallback(() => setOpen(false), []);
+  const handleClose = useCallback(() => {
+    setOpen(false);
+    elementRef.current = null;
+  }, []);
 
   return (
     <div className="container">
-      <button ref={elementRef} onClick={handleOpen}>
-        Click Here
-      </button>
+      <button onClick={handleOpen}>Click Here</button>
       <div>Content</div>
       <Popover
         open={open}
