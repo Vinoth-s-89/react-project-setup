@@ -80,7 +80,6 @@ function App() {
   return (
     <div className="container">
       <button onClick={handleOpen}>Click Here</button>
-      <div>Content</div>
       <Popover
         open={open}
         elementRef={elementRef}

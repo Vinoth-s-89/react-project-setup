@@ -20,6 +20,7 @@ const Popover = ({
   onClose,
   menuItems = [],
   isNested = false,
+  zIndex = 5,
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [innerProps, setInnerProps] = useState({
@@ -31,14 +32,26 @@ const Popover = ({
 
   const handleInnerMenuOpen = useCallback((event, menuItems) => {
     event.stopPropagation();
-    innerRef.current = event.currentTarget;
-    setInnerProps({ open: true, menuItems });
+    if (innerRef.current !== event.currentTarget) {
+      innerRef.current = event.currentTarget;
+      setInnerProps({ open: true, menuItems });
+    }
   }, []);
 
   const handleInnerMenuClose = useCallback(() => {
-    setInnerProps({ open: true, menuItems: null });
+    setInnerProps({ open: false, menuItems: null });
     innerRef.current = null;
   }, []);
+
+  const handlePosition = useCallback(() => {
+    if (elementRef?.current && open) {
+      const rect = elementRef.current.getBoundingClientRect();
+      setPosition({
+        x: isNested ? rect.x + rect.width + 3 : rect.x,
+        y: !isNested ? rect.y + rect.height + 3 : rect.y,
+      });
+    }
+  }, [elementRef, isNested, open]);
 
   // useEffect(() => {
   //   const handleClickOutside = (event) => {
@@ -51,20 +64,15 @@ const Popover = ({
   //   return () => {
   //     document.removeEventListener("click", handleClickOutside);
   //   };
-  // }, [onClose]);
-  const handlePosition = useCallback(() => {
-    if (elementRef?.current && open) {
-      const rect = elementRef.current.getBoundingClientRect();
-      setPosition({
-        x: isNested ? rect.x + rect.width + 3 : rect.x,
-        y: !isNested ? rect.y + rect.height + 3 : rect.y,
-      });
-    }
-  }, [elementRef, isNested, open]);
+  // }, []);
 
   useEffect(() => {
     handlePosition();
   }, [handlePosition]);
+
+  useEffect(() => {
+    if (!open && !elementRef.current) handleInnerMenuClose();
+  }, [open, elementRef, handleInnerMenuClose]);
 
   useEffect(() => {
     window.addEventListener("resize", handlePosition);
@@ -82,6 +90,7 @@ const Popover = ({
         style={{
           top: position.y,
           left: position.x,
+          zIndex,
         }}
         className="popover"
         ref={popoverRef}
@@ -111,6 +120,7 @@ const Popover = ({
           menuItems={innerProps.menuItems}
           key={`${"Default"}-${Math.random()}`}
           isNested
+          zIndex={zIndex + 5}
         />
       )}
     </>
