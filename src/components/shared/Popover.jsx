@@ -52,53 +52,57 @@ const Popover = ({
   //     document.removeEventListener("click", handleClickOutside);
   //   };
   // }, [onClose]);
-
-  useEffect(() => {
+  const handlePosition = useCallback(() => {
     if (elementRef?.current && open) {
       const rect = elementRef.current.getBoundingClientRect();
-      setPosition({ x: isNested ? rect.width + 5 : rect.x, y: rect.y });
+      setPosition({
+        x: isNested ? rect.x + rect.width + 3 : rect.x,
+        y: !isNested ? rect.y + rect.height + 3 : rect.y,
+      });
     }
-    if (!open || !elementRef.current) {
-      setInnerProps({ open: false, menuItems: null });
-      innerRef.current = null;
-    }
-  }, [elementRef, open, onClose, isNested]);
+  }, [elementRef, isNested, open]);
 
   useEffect(() => {
-    const handleResize = () => {
-      const rect = elementRef.current.getBoundingClientRect();
-      setPosition({ x: isNested ? rect.width + 5 : rect.x, y: rect.y });
-    };
-    window.addEventListener("resize", handleResize);
+    handlePosition();
+  }, [handlePosition]);
+
+  useEffect(() => {
+    window.addEventListener("resize", handlePosition);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", handlePosition);
     };
-  }, [elementRef, isNested]);
+  }, [handlePosition]);
 
   if (!open) return null;
 
   return (
-    <div
-      style={{
-        top: isNested ? 0 : position.y + 25,
-        left: position.x,
-      }}
-      className="popover"
-      ref={popoverRef}
-    >
-      {menuItems.map(({ label, menuItems: innerMenus }, index) => (
-        <div
-          key={label + index}
-          className="menu-item"
-          onClick={
-            !innerMenus ? onClose : (e) => handleInnerMenuOpen(e, innerMenus)
-          }
-        >
-          <div className="label">{label}</div>
-          {innerMenus && <div>{icons.forward}</div>}
+    <>
+      <div
+        style={{
+          top: position.y,
+          left: position.x,
+        }}
+        className="popover"
+        ref={popoverRef}
+      >
+        <div>
+          {menuItems.map(({ label, menuItems: innerMenus }, index) => (
+            <div
+              key={label + index}
+              className="menu-item"
+              onClick={
+                !innerMenus
+                  ? onClose
+                  : (e) => handleInnerMenuOpen(e, innerMenus)
+              }
+            >
+              <div className="label">{label}</div>
+              {innerMenus && <div>{icons.forward}</div>}
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
       {innerProps?.open && innerProps?.menuItems && innerRef && (
         <Popover
           open={innerProps?.open}
@@ -109,7 +113,7 @@ const Popover = ({
           isNested
         />
       )}
-    </div>
+    </>
   );
 };
 

@@ -8,6 +8,9 @@ const menuItems = [
     menuItems: [
       {
         label: "1st Inner Item -1",
+      },
+      {
+        label: "1st Inner Item -2",
         menuItems: [
           {
             label: "1st Inner Item -1",
@@ -30,9 +33,6 @@ const menuItems = [
             ],
           },
         ],
-      },
-      {
-        label: "1st Inner Item -2",
       },
       {
         label: "1st Inner Item -3",
