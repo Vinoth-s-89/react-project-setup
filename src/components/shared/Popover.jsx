@@ -1,42 +1,42 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-
-const icons = {
-  forward: (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      height="24px"
-      viewBox="0 -960 960 960"
-      width="24px"
-      fill="#e8eaed"
-    >
-      <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z" />
-    </svg>
-  ),
-};
+import "../../styles/Popover.css";
+import { icons } from "../../constants/icons";
 
 const Popover = ({
   open,
   elementRef,
   onClose,
   menuItems = [],
-  isNested = false,
+  parentIndex = "",
   zIndex = 5,
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [innerProps, setInnerProps] = useState({
     open: false,
     menuItems: null,
+    parentIndex: "",
   });
   const popoverRef = useRef(null);
   const innerRef = useRef(null);
 
-  const handleInnerMenuOpen = useCallback((event, menuItems) => {
-    event.stopPropagation();
-    if (innerRef.current !== event.currentTarget) {
-      innerRef.current = event.currentTarget;
-      setInnerProps({ open: true, menuItems });
-    }
-  }, []);
+  const handleInnerMenuOpen = useCallback(
+    (event, menuItems, index) => {
+      event.stopPropagation();
+      if (!menuItems) {
+        onClose();
+        return;
+      }
+      if (innerRef.current !== event.currentTarget) {
+        innerRef.current = event.currentTarget;
+        setInnerProps({
+          open: true,
+          menuItems,
+          parentIndex: !parentIndex ? `${index}` : parentIndex + index,
+        });
+      }
+    },
+    [onClose, parentIndex]
+  );
 
   const handleInnerMenuClose = useCallback(() => {
     setInnerProps({ open: false, menuItems: null });
@@ -47,32 +47,36 @@ const Popover = ({
     if (elementRef?.current && open) {
       const rect = elementRef.current.getBoundingClientRect();
       setPosition({
-        x: isNested ? rect.x + rect.width + 3 : rect.x,
-        y: !isNested ? rect.y + rect.height + 3 : rect.y,
+        x: parentIndex ? rect.x + rect.width + 3 : rect.x,
+        y: !parentIndex ? rect.y + rect.height + 3 : rect.y,
       });
     }
-  }, [elementRef, isNested, open]);
+  }, [elementRef, parentIndex, open]);
 
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (popoverRef.current && !popoverRef.current.contains(event.target)) {
-  //       onClose();
-  //     }
-  //   };
+  const handleClickOutside = useCallback(
+    (event) => {
+      event.stopPropagation();
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
-  //   document.addEventListener("click", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutside);
-  //   };
-  // }, []);
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [handleClickOutside]);
 
   useEffect(() => {
     handlePosition();
   }, [handlePosition]);
 
   useEffect(() => {
-    if (!open && !elementRef.current) handleInnerMenuClose();
-  }, [open, elementRef, handleInnerMenuClose]);
+    if (!open) handleInnerMenuClose();
+  }, [handleInnerMenuClose, open]);
 
   useEffect(() => {
     window.addEventListener("resize", handlePosition);
@@ -81,6 +85,8 @@ const Popover = ({
       window.removeEventListener("resize", handlePosition);
     };
   }, [handlePosition]);
+
+  console.log(parentIndex);
 
   if (!open) return null;
 
@@ -100,11 +106,7 @@ const Popover = ({
             <div
               key={label + index}
               className="menu-item"
-              onClick={
-                !innerMenus
-                  ? onClose
-                  : (e) => handleInnerMenuOpen(e, innerMenus)
-              }
+              onClick={(e) => handleInnerMenuOpen(e, innerMenus, index)}
             >
               <div className="label">{label}</div>
               {innerMenus && <div>{icons.forward}</div>}
@@ -112,14 +114,14 @@ const Popover = ({
           ))}
         </div>
       </div>
-      {innerProps?.open && innerProps?.menuItems && innerRef && (
+      {innerProps?.open && (
         <Popover
           open={innerProps?.open}
           elementRef={innerRef}
           onClose={handleInnerMenuClose}
           menuItems={innerProps.menuItems}
-          key={`${"Default"}-${Math.random()}`}
-          isNested
+          key={parentIndex}
+          parentIndex={innerProps.parentIndex}
           zIndex={zIndex + 5}
         />
       )}

@@ -8,27 +8,49 @@ const menuItems = [
     menuItems: [
       {
         label: "1st Inner Item -1",
+        menuItems: [
+          {
+            label: "3rd Inner Item -1",
+          },
+          {
+            label: "3rd Inner Item -2",
+          },
+          {
+            label: "3rd Inner Item -3",
+          },
+        ],
       },
       {
         label: "1st Inner Item -2",
         menuItems: [
           {
-            label: "1st Inner Item -1",
+            label: "2nd Inner Item -1",
           },
           {
-            label: "1st Inner Item -2",
-          },
-          {
-            label: "1st Inner Item -3",
+            label: "2nd Inner Item -2",
             menuItems: [
               {
-                label: "1st Inner Item -1",
+                label: "3rd Inner Item -1",
               },
               {
-                label: "1st Inner Item -2",
+                label: "3rd Inner Item -2",
               },
               {
-                label: "1st Inner Item -3",
+                label: "3rd Inner Item -3",
+              },
+            ],
+          },
+          {
+            label: "2nd Inner Item -3",
+            menuItems: [
+              {
+                label: "3rd Inner Item -1",
+              },
+              {
+                label: "3rd Inner Item -2",
+              },
+              {
+                label: "3rd Inner Item -3",
               },
             ],
           },
