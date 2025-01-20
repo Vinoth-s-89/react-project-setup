@@ -1,0 +1,40 @@
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 36px);
+  gap: 5px;
+  border: 1px solid #7b7b7b;
+  padding: 0px 5px 5px 5px;
+  border-radius: 8px;
+}
+
+.week {
+  text-align: center;
+  padding: 5px 0px;
+}
+
+.empty-day {
+  border: none;
+}
+
+.week-header {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.week-day {
+  border: 1px solid #7b7b7b;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 50%;
+  text-align: center;
+  color: #494949;
+}
+
+.day:hover {
+  background-color: #d3d3d3;
+}
+
+.week-end {
+  border-color: #c20101;
+  color: #c20101;
+}

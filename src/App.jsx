@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import "./App.css";
 import Popover from "./components/shared/Popover";
+import Calendar from "./components/shared/Calendar";
 
 const menuItems = [
   {
@@ -108,6 +109,7 @@ function App() {
         onClose={handleClose}
         menuItems={menuItems}
       />
+      <Calendar />
     </div>
   );
 }

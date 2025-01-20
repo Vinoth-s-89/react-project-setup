@@ -18,6 +18,7 @@ const Popover = ({
   });
   const popoverRef = useRef(null);
   const innerRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(null);
 
   const handleInnerMenuOpen = useCallback(
     (event, menuItems, index) => {
@@ -28,11 +29,13 @@ const Popover = ({
       }
       if (innerRef.current !== event.currentTarget) {
         innerRef.current = event.currentTarget;
+        const newIndex = !parentIndex ? `${index}` : parentIndex + index;
         setInnerProps({
           open: true,
           menuItems,
-          parentIndex: !parentIndex ? `${index}` : parentIndex + index,
+          parentIndex: newIndex,
         });
+        setCurrentIndex(newIndex);
       }
     },
     [onClose, parentIndex]
@@ -86,7 +89,11 @@ const Popover = ({
     };
   }, [handlePosition]);
 
-  console.log(parentIndex);
+  // console.log({
+  //   parentIndex,
+  //   currentIndex,
+  //   innerIndex: innerProps.parentIndex,
+  // });
 
   if (!open) return null;
 
