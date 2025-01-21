@@ -1,16 +1,64 @@
 .calendar {
   display: grid;
-  grid-template-columns: repeat(7, 36px);
-  gap: 5px;
+  grid-template-rows: repeat(3, auto);
   border: 1px solid #7b7b7b;
-  padding: 0px 5px 5px 5px;
+  padding: 10px;
   border-radius: 8px;
+  gap: 5px;
 }
 
-.week {
-  text-align: center;
-  padding: 5px 0px;
+/* gap: 5px 10px; */
+
+.week-day-conatainer {
+  display: grid;
+  grid-template-columns: repeat(7, 30px);
+  gap: 5px 10px;
 }
+
+.days-container {
+  display: grid;
+  grid-template-columns: repeat(7, 30px);
+  gap: 5px 10px;
+}
+
+/* .days-container.left,
+.days-container.right {
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.days-container.left {
+  animation-name: slide-left;
+}
+
+.days-container.right {
+  animation-name: slide-right;
+}
+
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+} */
 
 .empty-day {
   border: none;
@@ -19,22 +67,96 @@
 .week-header {
   font-weight: 700;
   font-size: 14px;
+  text-align: center;
+  user-select: none;
 }
 
-.week-day {
+.week-day,
+.week-end,
+.current-day,
+.selected-date {
   border: 1px solid #7b7b7b;
   padding: 5px;
   cursor: pointer;
   border-radius: 50%;
   text-align: center;
   color: #494949;
+  font-size: 14px;
+  height: 30px;
+  user-select: none;
 }
 
-.day:hover {
+.selected-date {
+  background-color: #006bbd;
+  color: #fff;
+  border-color: #006bbd;
+  transition: all 0.2s;
+}
+
+.current-day {
+  background-color: #d3d3d3;
+  border-color: #d3d3d3;
+}
+
+.week-day:hover,
+.current-month:hover,
+.current-year:hover {
   background-color: #d3d3d3;
 }
 
 .week-end {
   border-color: #c20101;
   color: #c20101;
+}
+
+.picker {
+  grid-column: 1 / -1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  padding: 0px 5px;
+  align-items: center;
+}
+
+.month-changer {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.current-year,
+.current-month {
+  cursor: pointer;
+  padding: 0px 5px;
+  border-radius: 3px;
+}
+
+.icon-conatainer {
+  cursor: pointer;
+  height: 28px;
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.icon-conatainer svg {
+  height: 16px;
+  width: 14px;
+  fill: #8a8a8a;
+}
+
+.icon-conatainer:hover {
+  background-color: #d3d3d3;
+  svg {
+    fill: #494949;
+  }
+}
+
+.icon-conatainer:active {
+  svg {
+    fill: #ebebeb;
+  }
 }

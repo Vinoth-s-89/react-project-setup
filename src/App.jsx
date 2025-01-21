@@ -99,6 +99,7 @@ function App() {
     setOpen(false);
     elementRef.current = null;
   }, []);
+  const [value, setValue] = useState("");
 
   return (
     <div className="container">
@@ -109,7 +110,7 @@ function App() {
         onClose={handleClose}
         menuItems={menuItems}
       />
-      <Calendar />
+      <Calendar value={value} setValue={setValue} />
     </div>
   );
 }
