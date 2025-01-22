@@ -57,6 +57,7 @@ export const useCalendar = (value, setValue) => {
   });
   const [days, setDays] = useState([]);
   const [currentView, setCurrentView] = useState("days");
+  const [open, setOpen] = useState(false);
 
   const currentDate = useMemo(() => {
     const date = new Date();
@@ -151,5 +152,7 @@ export const useCalendar = (value, setValue) => {
     handleYearChange,
     handleMonthChange,
     selectedYearRef,
+    open,
+    setOpen,
   };
 };
