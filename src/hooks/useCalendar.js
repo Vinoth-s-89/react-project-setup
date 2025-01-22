@@ -1,3 +1,4 @@
+import { use, useRef } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const useCalendar = (value, setValue) => {
@@ -55,6 +56,7 @@ export const useCalendar = (value, setValue) => {
     month: new Date().getMonth(),
   });
   const [days, setDays] = useState([]);
+  const [currentView, setCurrentView] = useState("days");
 
   const currentDate = useMemo(() => {
     const date = new Date();
@@ -88,6 +90,16 @@ export const useCalendar = (value, setValue) => {
     }));
   }, []);
 
+  const handleYearChange = useCallback((year) => {
+    setUserInput((prev) => ({ ...prev, year }));
+    setCurrentView("days");
+  }, []);
+
+  const handleMonthChange = useCallback((month) => {
+    setUserInput((prev) => ({ ...prev, month }));
+    setCurrentView("days");
+  }, []);
+
   const getDayClassName = useCallback(
     (date, index) => {
       if (!date) return "empty-day";
@@ -112,6 +124,17 @@ export const useCalendar = (value, setValue) => {
     [setValue, userInput.month, userInput.year]
   );
 
+  const selectedYearRef = useRef(null);
+
+  useEffect(() => {
+    if (currentView === "years" && selectedYearRef.current) {
+      selectedYearRef.current.scrollIntoView({
+        behavior: "smooth",
+        // block: "center",
+      });
+    }
+  }, [currentView]);
+
   return {
     months,
     weekDays,
@@ -123,5 +146,10 @@ export const useCalendar = (value, setValue) => {
     getDayClassName,
     currentDate,
     handleDateSelection,
+    currentView,
+    setCurrentView,
+    handleYearChange,
+    handleMonthChange,
+    selectedYearRef,
   };
 };
