@@ -1,12 +1,11 @@
 import "../../styles/calendar.css";
 import { icons } from "../../constants/icons";
 import { useCalendar } from "../../hooks/useCalendar";
+import { getYears, months, weekDays } from "../../constants/calender";
+import CalendarIcon from "../../assets/calendar.svg?react";
 
 const Calendar = ({ value, setValue }) => {
   const {
-    months,
-    weekDays,
-    getYears,
     userInput,
     days,
     prevMonthChange,
@@ -20,16 +19,22 @@ const Calendar = ({ value, setValue }) => {
     handleMonthChange,
     open,
     setOpen,
+    containerRef,
+    dateString,
   } = useCalendar(value, setValue);
 
   return (
-    <div>
+    <div ref={containerRef} className="outer-container">
       <input
         type="text"
         placeholder="Date"
+        className="date-input-field"
         onFocus={() => setOpen(true)}
-        onBlur={() => setOpen(false)}
+        onKeyDown={(e) => e.preventDefault()}
+        onChange={(e) => e.preventDefault()}
+        value={dateString}
       />
+      <CalendarIcon className="calendar-icon" onClick={() => setOpen(!open)} />
       <div className={`calendar-container ${open ? "open" : ""}`}>
         <div
           className={`calendar ${currentView === "years" ? "years-view" : ""}`}
@@ -60,13 +65,13 @@ const Calendar = ({ value, setValue }) => {
           </div>
           {currentView === "years" && (
             <div className="years-container">
-              {getYears.map((year, index) => (
+              {getYears().map((year, index) => (
                 <div
                   key={index}
                   className={`year ${
                     year === userInput.year ? "picked-year" : ""
                   }`}
-                  onClick={() => handleYearChange(year)}
+                  onClick={(event) => handleYearChange(event, year)}
                   ref={year === userInput.year ? selectedYearRef : null}
                 >
                   {year}
@@ -82,7 +87,7 @@ const Calendar = ({ value, setValue }) => {
                     index === userInput.month ? "picked-month" : ""
                   }`}
                   key={index}
-                  onClick={() => handleMonthChange(index)}
+                  onClick={(event) => handleMonthChange(event, index)}
                 >
                   {month}
                 </div>

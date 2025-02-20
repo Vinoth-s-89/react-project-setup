@@ -1,56 +1,8 @@
-import { useRef } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { getDays } from "../constants/calender";
 
 export const useCalendar = (value, setValue) => {
-  const months = useMemo(
-    () => [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
-    []
-  );
-
-  const weekDays = useMemo(
-    () => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    []
-  );
-
-  const getYears = useMemo(() => {
-    const years = [];
-    for (let i = 1970; i <= 2050; i++) {
-      years.push(i);
-    }
-    return years;
-  }, []);
-
-  const getDays = (month = 0, year = new Date().getFullYear()) => {
-    const endDate = new Date(year, month + 1, 0).getDate();
-    const days = [];
-    let day = new Date(year, month, 1).getDay();
-    let weekCount = 0;
-
-    for (let i = 1; i <= endDate; i++) {
-      if (!days[weekCount]) days[weekCount] = Array(7).fill(null);
-      days[weekCount][day] = i;
-      if (day === 6) {
-        weekCount++;
-      }
-      day = day === 6 ? 0 : day + 1;
-    }
-
-    return days;
-  };
-
   const [userInput, setUserInput] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
@@ -58,17 +10,25 @@ export const useCalendar = (value, setValue) => {
   const [days, setDays] = useState([]);
   const [currentView, setCurrentView] = useState("days");
   const [open, setOpen] = useState(false);
+  const selectedYearRef = useRef(null);
+  const containerRef = useRef(null);
 
-  const currentDate = useMemo(() => {
-    const date = new Date();
-    if (
-      userInput.year === date.getFullYear() &&
-      userInput.month === date.getMonth()
-    ) {
-      return date.getDate();
-    }
-    return null;
-  }, [userInput]);
+  useEffect(() => {
+    if (!open) setCurrentView("days");
+    const handleClickOutside = (event) => {
+      if (
+        open &&
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [open]);
 
   useEffect(() => {
     const { year, month } = userInput;
@@ -76,6 +36,27 @@ export const useCalendar = (value, setValue) => {
       setDays(getDays(parseInt(month), parseInt(year)));
     }
   }, [userInput]);
+
+  useEffect(() => {
+    if (currentView === "years" && selectedYearRef.current) {
+      selectedYearRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [currentView]);
+
+  const dateString = useMemo(
+    () =>
+      value
+        ? value.toLocaleDateString("en-IN", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })
+        : "",
+    [value]
+  );
 
   const prevMonthChange = useCallback(() => {
     setUserInput((prev) => ({
@@ -91,18 +72,21 @@ export const useCalendar = (value, setValue) => {
     }));
   }, []);
 
-  const handleYearChange = useCallback((year) => {
+  const handleYearChange = useCallback((event, year) => {
+    event.stopPropagation();
     setUserInput((prev) => ({ ...prev, year }));
-    setCurrentView("days");
+    setCurrentView("months");
   }, []);
 
-  const handleMonthChange = useCallback((month) => {
+  const handleMonthChange = useCallback((event, month) => {
+    event.stopPropagation();
     setUserInput((prev) => ({ ...prev, month }));
     setCurrentView("days");
   }, []);
 
   const getDayClassName = useCallback(
     (date, index) => {
+      const currentDate = new Date();
       if (!date) return "empty-day";
       else if (
         value &&
@@ -112,40 +96,31 @@ export const useCalendar = (value, setValue) => {
       )
         return "selected-date";
       else if (index === 0 || index === 6) return "week-end";
-      else if (date === currentDate) return "current-day";
+      else if (
+        userInput.year === currentDate.getFullYear() &&
+        userInput.month === currentDate.getMonth() &&
+        date === currentDate.getDate()
+      )
+        return "current-day";
       else return "week-day";
     },
-    [currentDate, value, userInput]
+    [value, userInput]
   );
 
   const handleDateSelection = useCallback(
     (date) => {
       setValue(new Date(userInput.year, userInput.month, date));
+      setOpen(false);
     },
     [setValue, userInput.month, userInput.year]
   );
 
-  const selectedYearRef = useRef(null);
-
-  useEffect(() => {
-    if (currentView === "years" && selectedYearRef.current) {
-      selectedYearRef.current.scrollIntoView({
-        behavior: "smooth",
-        // block: "center",
-      });
-    }
-  }, [currentView]);
-
   return {
-    months,
-    weekDays,
-    getYears,
     userInput,
     days,
     prevMonthChange,
     nextMonthChange,
     getDayClassName,
-    currentDate,
     handleDateSelection,
     currentView,
     setCurrentView,
@@ -154,5 +129,7 @@ export const useCalendar = (value, setValue) => {
     selectedYearRef,
     open,
     setOpen,
+    containerRef,
+    dateString,
   };
 };
