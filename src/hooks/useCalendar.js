@@ -1,11 +1,16 @@
-import { useMemo, useRef } from "react";
-import { useCallback, useEffect, useState } from "react";
-import { getDays } from "../constants/calender";
+import { useCallback, useEffect, useState, useRef } from "react";
+import { currentDate, getDays } from "../constants/calender";
 
-export const useCalendar = (value, setValue) => {
+export const useCalendar = ({ value, setValue, maxDate, minDate }) => {
   const [userInput, setUserInput] = useState({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth(),
+    year:
+      maxDate && maxDate?.getFullYear() < currentDate.getFullYear()
+        ? maxDate?.getFullYear()
+        : currentDate.getFullYear(),
+    month:
+      maxDate?.getMonth() < currentDate.getMonth()
+        ? maxDate?.getMonth()
+        : currentDate.getMonth(),
   });
   const [days, setDays] = useState([]);
   const [currentView, setCurrentView] = useState("days");
@@ -46,18 +51,6 @@ export const useCalendar = (value, setValue) => {
     }
   }, [currentView]);
 
-  const dateString = useMemo(
-    () =>
-      value
-        ? value.toLocaleDateString("en-IN", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          })
-        : "",
-    [value]
-  );
-
   const prevMonthChange = useCallback(() => {
     setUserInput((prev) => ({
       month: prev.month === 0 ? 11 : prev.month - 1,
@@ -85,8 +78,8 @@ export const useCalendar = (value, setValue) => {
   }, []);
 
   const getDayClassName = useCallback(
-    (date, index) => {
-      const currentDate = new Date();
+    (date) => {
+      const pickerDate = new Date(userInput.year, userInput.month, date);
       if (!date) return "empty-day";
       else if (
         value &&
@@ -95,16 +88,25 @@ export const useCalendar = (value, setValue) => {
         value.getFullYear() === userInput.year
       )
         return "selected-date";
-      else if (index === 0 || index === 6) return "week-end";
+      // else if (index === 0 || index === 6) return "week-end";
       else if (
         userInput.year === currentDate.getFullYear() &&
         userInput.month === currentDate.getMonth() &&
         date === currentDate.getDate()
       )
         return "current-day";
+      // else if (
+      //   maxDate &&
+      //   minDate &&
+      //   pickerDate > minDate &&
+      //   pickerDate < maxDate
+      // )
+      //   return "week-day";
+      else if (maxDate && maxDate < pickerDate) return "week-day disabled-day";
+      // else if (minDate && pickerDate > minDate) return "week-day disabled-day";
       else return "week-day";
     },
-    [value, userInput]
+    [maxDate, userInput, value]
   );
 
   const handleDateSelection = useCallback(
@@ -130,6 +132,5 @@ export const useCalendar = (value, setValue) => {
     open,
     setOpen,
     containerRef,
-    dateString,
   };
 };

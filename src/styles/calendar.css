@@ -141,9 +141,16 @@
   color: #fff;
 }
 
-.week-end {
+/* .week-end {
   border-color: #c20101;
   color: #c20101;
+} */
+
+.disabled-day {
+  color: #b3b3bb;
+  border-color: #c8c8c8;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .picker {

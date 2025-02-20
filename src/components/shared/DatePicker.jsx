@@ -1,10 +1,15 @@
 import "../../styles/calendar.css";
 import { icons } from "../../constants/icons";
 import { useCalendar } from "../../hooks/useCalendar";
-import { getYears, months, weekDays } from "../../constants/calender";
+import {
+  formatDate,
+  getYears,
+  months,
+  weekDays,
+} from "../../constants/calender";
 import CalendarIcon from "../../assets/calendar.svg?react";
 
-const Calendar = ({ value, setValue }) => {
+const DatePicker = ({ value, setValue, maxDate, minDate }) => {
   const {
     userInput,
     days,
@@ -20,8 +25,7 @@ const Calendar = ({ value, setValue }) => {
     open,
     setOpen,
     containerRef,
-    dateString,
-  } = useCalendar(value, setValue);
+  } = useCalendar({ value, setValue, maxDate, minDate });
 
   return (
     <div ref={containerRef} className="outer-container">
@@ -32,7 +36,7 @@ const Calendar = ({ value, setValue }) => {
         onFocus={() => setOpen(true)}
         onKeyDown={(e) => e.preventDefault()}
         onChange={(e) => e.preventDefault()}
-        value={dateString}
+        value={formatDate(value)}
       />
       <CalendarIcon className="calendar-icon" onClick={() => setOpen(!open)} />
       <div className={`calendar-container ${open ? "open" : ""}`}>
@@ -109,7 +113,7 @@ const Calendar = ({ value, setValue }) => {
                     week.map((date, index) => (
                       <div
                         key={`${weekIndex}${index}`}
-                        className={getDayClassName(date, index)}
+                        className={getDayClassName(date)}
                         onClick={() => handleDateSelection(date)}
                       >
                         {date || ""}
@@ -125,4 +129,4 @@ const Calendar = ({ value, setValue }) => {
   );
 };
 
-export default Calendar;
+export default DatePicker;

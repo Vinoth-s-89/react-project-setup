@@ -40,3 +40,14 @@ export const getDays = (month = 0, year = new Date().getFullYear()) => {
 
   return days;
 };
+
+export const currentDate = new Date();
+
+export const formatDate = (value) =>
+  value
+    ? value.toLocaleDateString("en-IN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+    : "";

@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import "./App.css";
 import Popover from "./components/shared/Popover";
-import Calendar from "./components/shared/Calendar";
+import DatePicker from "./components/shared/DatePicker";
 
 const menuItems = [
   {
@@ -110,7 +110,12 @@ function App() {
         onClose={handleClose}
         menuItems={menuItems}
       />
-      <Calendar value={value} setValue={setValue} />
+      <DatePicker
+        value={value}
+        setValue={setValue}
+        maxDate={new Date(2025, 5, 5)}
+        minDate={new Date(2024, 11, 12)}
+      />
     </div>
   );
 }
