@@ -3,6 +3,8 @@ import { icons } from "../../constants/icons";
 import { useCalendar } from "../../hooks/useCalendar";
 import {
   formatDate,
+  getDayClassName,
+  getIconClass,
   getYears,
   months,
   weekDays,
@@ -15,7 +17,6 @@ const DatePicker = ({ value, setValue, maxDate, minDate }) => {
     days,
     prevMonthChange,
     nextMonthChange,
-    getDayClassName,
     handleDateSelection,
     currentView,
     setCurrentView,
@@ -58,10 +59,16 @@ const DatePicker = ({ value, setValue, maxDate, minDate }) => {
             </div>
             {currentView === "days" && (
               <div className="month-changer">
-                <div className="icon-conatainer" onClick={prevMonthChange}>
+                <div
+                  className={`${getIconClass({ minDate, userInput })}`}
+                  onClick={prevMonthChange}
+                >
                   {icons["arrow-left"]}
                 </div>
-                <div className="icon-conatainer" onClick={nextMonthChange}>
+                <div
+                  className={`${getIconClass({ maxDate, userInput })}`}
+                  onClick={nextMonthChange}
+                >
                   {icons["arrow-right"]}
                 </div>
               </div>
@@ -113,7 +120,13 @@ const DatePicker = ({ value, setValue, maxDate, minDate }) => {
                     week.map((date, index) => (
                       <div
                         key={`${weekIndex}${index}`}
-                        className={getDayClassName(date)}
+                        className={getDayClassName({
+                          date,
+                          maxDate,
+                          minDate,
+                          userInput,
+                          value,
+                        })}
                         onClick={() => handleDateSelection(date)}
                       >
                         {date || ""}

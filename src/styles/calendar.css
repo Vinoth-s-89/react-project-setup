@@ -192,6 +192,13 @@
   fill: #8a8a8a;
 }
 
+.diabled-icon {
+  background: none;
+  svg {
+    fill: #c5c5c5;
+  }
+}
+
 .icon-conatainer:hover {
   background-color: #d3d3d3;
   svg {
@@ -199,9 +206,22 @@
   }
 }
 
+.diabled-icon:hover {
+  background-color: #ececec;
+  svg {
+    fill: #b8b8b8;
+  }
+}
+
 .icon-conatainer:active {
   svg {
     fill: #ebebeb;
+  }
+}
+
+.diabled-icon:active {
+  svg {
+    fill: #b8b8b8;
   }
 }
 

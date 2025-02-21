@@ -113,8 +113,8 @@ function App() {
       <DatePicker
         value={value}
         setValue={setValue}
-        maxDate={new Date(2025, 5, 5)}
-        minDate={new Date(2024, 11, 12)}
+        minDate={new Date(2024, 9, 7)}
+        maxDate={new Date(2025, 6, 8)}
       />
     </div>
   );
