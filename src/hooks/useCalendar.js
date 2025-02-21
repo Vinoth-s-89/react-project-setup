@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { getDays, getInitialUserInput } from "../constants/calender";
 
-export const useCalendar = ({ setValue, maxDate, minDate }) => {
+export const useCalendar = ({ setValue, maxDate, minDate, value }) => {
   const [userInput, setUserInput] = useState(getInitialUserInput(maxDate));
-
   const [days, setDays] = useState([]);
   const [currentView, setCurrentView] = useState("days");
   const [open, setOpen] = useState(false);
@@ -36,6 +35,11 @@ export const useCalendar = ({ setValue, maxDate, minDate }) => {
       setDays(getDays(parseInt(month), parseInt(year)));
     }
   }, [userInput]);
+
+  useEffect(() => {
+    if (value)
+      setUserInput({ year: value?.getFullYear(), month: value?.getMonth() });
+  }, [value]);
 
   useEffect(() => {
     if (currentView === "years" && selectedYearRef.current) {

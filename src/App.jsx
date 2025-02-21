@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import "./App.css";
 import Popover from "./components/shared/Popover";
 import DatePicker from "./components/shared/DatePicker";
+import { getDateMinusYears, getDatePlusYears } from "./constants/calender";
 
 const menuItems = [
   {
@@ -113,8 +114,8 @@ function App() {
       <DatePicker
         value={value}
         setValue={setValue}
-        minDate={new Date(2024, 9, 7)}
-        maxDate={new Date(2025, 6, 8)}
+        minDate={getDateMinusYears(1)}
+        maxDate={getDatePlusYears(2)}
       />
     </div>
   );

@@ -5,8 +5,8 @@ import {
   formatDate,
   getDayClassName,
   getIconClass,
+  getMonths,
   getYears,
-  months,
   weekDays,
 } from "../../constants/calender";
 import CalendarIcon from "../../assets/calendar.svg?react";
@@ -55,7 +55,7 @@ const DatePicker = ({ value, setValue, maxDate, minDate }) => {
               className="selected-month"
               onClick={() => setCurrentView("months")}
             >
-              {months[userInput.month]}
+              {getMonths(maxDate, userInput)[userInput.month]}
             </div>
             {currentView === "days" && (
               <div className="month-changer">
@@ -76,7 +76,10 @@ const DatePicker = ({ value, setValue, maxDate, minDate }) => {
           </div>
           {currentView === "years" && (
             <div className="years-container">
-              {getYears().map((year, index) => (
+              {getYears({
+                minYear: minDate?.getFullYear(),
+                maxYear: maxDate?.getFullYear(),
+              }).map((year, index) => (
                 <div
                   key={index}
                   className={`year ${
@@ -92,7 +95,7 @@ const DatePicker = ({ value, setValue, maxDate, minDate }) => {
           )}
           {currentView === "months" && (
             <div className="months-container">
-              {months.map((month, index) => (
+              {getMonths(maxDate, userInput).map((month, index) => (
                 <div
                   className={`month ${
                     index === userInput.month ? "picked-month" : ""

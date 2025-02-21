@@ -1,4 +1,4 @@
-export const months = [
+let months = [
   "January",
   "February",
   "March",
@@ -12,12 +12,16 @@ export const months = [
   "November",
   "December",
 ];
+export const getMonths = (maxDate, userInput) => {
+  if (userInput?.year < maxDate.getFullYear()) return months;
+  return months.slice(0, maxDate.getMonth() + 1);
+};
 
 export const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export const getYears = () => {
+export const getYears = ({ minYear, maxYear }) => {
   const years = [];
-  for (let i = 1970; i <= 2050; i++) {
+  for (let i = minYear || 1970; i <= (maxYear || 2050); i++) {
     years.push(i);
   }
   return years;
@@ -106,4 +110,16 @@ export const getDayClassName = ({
   } else if (maxDate && pickerDate > maxDate) return "week-day disabled-day";
   else if (minDate && pickerDate < minDate) return "week-day disabled-day";
   else return "week-day";
+};
+
+export const getDateMinusYears = (noOfYears) => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - noOfYears);
+  return date;
+};
+
+export const getDatePlusYears = (noOfYears) => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() + noOfYears);
+  return date;
 };
