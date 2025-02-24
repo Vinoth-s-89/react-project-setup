@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useRef } from "react";
-import { getDays, getInitialUserInput } from "../constants/calender";
+import { getDays, getInitialUserInput } from "../constants/datepicker";
 
 export const useCalendar = ({ setValue, maxDate, minDate, value }) => {
   const [userInput, setUserInput] = useState(getInitialUserInput(maxDate));

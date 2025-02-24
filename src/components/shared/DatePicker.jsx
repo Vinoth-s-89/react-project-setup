@@ -8,7 +8,7 @@ import {
   getMonths,
   getYears,
   weekDays,
-} from "../../constants/calender";
+} from "../../constants/datepicker";
 import CalendarIcon from "../../assets/calendar.svg?react";
 
 const DatePicker = ({ value, setValue, maxDate, minDate }) => {
