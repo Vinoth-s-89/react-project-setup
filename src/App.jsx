@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import "./App.css";
 import Popover from "./components/shared/Popover";
 import { getDateMinusYears, getDatePlusYears } from "./constants/datepicker";
-import DatePicker from "./components/shared/DatePicker";
+import CustomDatePicker from "custom-date-selector";
 
 const menuItems = [
   {
@@ -111,7 +111,7 @@ function App() {
         onClose={handleClose}
         menuItems={menuItems}
       />
-      <DatePicker
+      <CustomDatePicker
         value={value}
         setValue={setValue}
         minDate={getDateMinusYears(1)}
