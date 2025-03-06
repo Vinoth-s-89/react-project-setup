@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import "./App.css";
-import Popover from "./components/shared/Popover";
+import Popover from "@shared/Popover";
 import { getDateMinusYears, getDatePlusYears } from "./constants/datepicker";
 import CustomDatePicker from "custom-date-selector";
 

@@ -1,5 +1,5 @@
 import "../../styles/calendar.css";
-import { icons } from "../../constants/icons";
+import { icons } from "@constants/icons";
 import { useCalendar } from "../../hooks/useCalendar";
 import {
   formatDate,
