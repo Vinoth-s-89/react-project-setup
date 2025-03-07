@@ -9,6 +9,7 @@ const Popover = ({
   menuItems = [],
   parentIndex = "",
   zIndex = 5,
+  handleMenuClick,
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [innerProps, setInnerProps] = useState({
@@ -19,30 +20,26 @@ const Popover = ({
   const popoverRef = useRef(null);
   const innerRef = useRef(null);
 
-  const handleInnerMenuOpen = useCallback(
-    (event, menuItems, index) => {
-      event.stopPropagation();
-      if (!menuItems) {
-        onClose();
-        return;
-      }
-      if (innerRef.current !== event.currentTarget) {
-        innerRef.current = event.currentTarget;
-        const newIndex = !parentIndex ? `${index}` : parentIndex + index;
+  const handleInnerMenuOpen = (event, menuItems, index, props) => {
+    event.stopPropagation();
+    if (!menuItems) {
+      if (handleMenuClick) handleMenuClick(props);
+      onClose();
+      return;
+    }
+    if (innerRef.current !== event.currentTarget) {
+      innerRef.current = event.currentTarget;
+      const newIndex = !parentIndex ? `${index}` : parentIndex + index;
+      setInnerProps({ open: false });
+      setTimeout(() => {
         setInnerProps({
           open: true,
           menuItems,
           parentIndex: newIndex,
         });
-      }
-    },
-    [onClose, parentIndex]
-  );
-
-  const handleInnerMenuClose = useCallback(() => {
-    setInnerProps({ open: false, menuItems: null });
-    innerRef.current = null;
-  }, []);
+      }, 1);
+    }
+  };
 
   const handlePosition = useCallback(() => {
     if (elementRef?.current && open) {
@@ -76,10 +73,6 @@ const Popover = ({
   }, [handlePosition]);
 
   useEffect(() => {
-    if (!open) handleInnerMenuClose();
-  }, [handleInnerMenuClose, open]);
-
-  useEffect(() => {
     window.addEventListener("resize", handlePosition);
 
     return () => {
@@ -87,10 +80,17 @@ const Popover = ({
     };
   }, [handlePosition]);
 
+  useEffect(() => {
+    if (!open) setInnerProps({ open: false, menuItems: null, parentIndex: "" });
+  }, [open]);
+
   if (!open) return null;
 
   return (
     <>
+      {!parentIndex && (
+        <div className="popover-overlay" style={{ zIndex: zIndex - 1 }}></div>
+      )}
       <div
         style={{
           top: position.y,
@@ -101,29 +101,53 @@ const Popover = ({
         ref={popoverRef}
       >
         <div>
-          {menuItems.map(({ label, menuItems: innerMenus }, index) => (
-            <div
-              key={label + index}
-              className="menu-item"
-              onClick={(e) => handleInnerMenuOpen(e, innerMenus, index)}
-            >
-              <div className="label">{label}</div>
-              {innerMenus && <div>{icons.forward}</div>}
-            </div>
-          ))}
+          {menuItems.map(
+            (
+              {
+                label,
+                menuItems: innerMenus,
+                icon,
+                labelStyles = {},
+                iconStyles = {},
+                ...props
+              },
+              index
+            ) => (
+              <div
+                key={label + index}
+                className="menu-item"
+                onClick={(e) =>
+                  handleInnerMenuOpen(e, innerMenus, index, props)
+                }
+              >
+                {icon && (
+                  <div className="menu-icon" style={iconStyles}>
+                    {icon}
+                  </div>
+                )}
+                <div className="label" style={labelStyles}>
+                  {label}
+                </div>
+                {innerMenus && (
+                  <div className="nested-menu">{icons.forward}</div>
+                )}
+              </div>
+            )
+          )}
         </div>
+        {innerProps?.open && (
+          <Popover
+            open={innerProps?.open}
+            elementRef={innerRef}
+            onClose={onClose}
+            menuItems={innerProps.menuItems}
+            key={parentIndex}
+            parentIndex={innerProps.parentIndex}
+            zIndex={zIndex + 5}
+            handleMenuClick={handleMenuClick}
+          />
+        )}
       </div>
-      {innerProps?.open && (
-        <Popover
-          open={innerProps?.open}
-          elementRef={innerRef}
-          onClose={handleInnerMenuClose}
-          menuItems={innerProps.menuItems}
-          key={parentIndex}
-          parentIndex={innerProps.parentIndex}
-          zIndex={zIndex + 5}
-        />
-      )}
     </>
   );
 };

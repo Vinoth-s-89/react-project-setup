@@ -1,89 +1,9 @@
 import { useCallback, useRef, useState } from "react";
 import "./App.css";
 import Popover from "@shared/Popover";
-import { getDateMinusYears, getDatePlusYears } from "./constants/datepicker";
-import CustomDatePicker from "custom-date-selector";
-
-const menuItems = [
-  {
-    label: "Item -1",
-    menuItems: [
-      {
-        label: "1st Inner Item -1",
-        menuItems: [
-          {
-            label: "3rd Inner Item -1",
-          },
-          {
-            label: "3rd Inner Item -2",
-          },
-          {
-            label: "3rd Inner Item -3",
-          },
-        ],
-      },
-      {
-        label: "1st Inner Item -2",
-        menuItems: [
-          {
-            label: "2nd Inner Item -1",
-          },
-          {
-            label: "2nd Inner Item -2",
-            menuItems: [
-              {
-                label: "3rd Inner Item -1",
-              },
-              {
-                label: "3rd Inner Item -2",
-              },
-              {
-                label: "3rd Inner Item -3",
-              },
-            ],
-          },
-          {
-            label: "2nd Inner Item -3",
-            menuItems: [
-              {
-                label: "3rd Inner Item -1",
-              },
-              {
-                label: "3rd Inner Item -2",
-              },
-              {
-                label: "3rd Inner Item -3",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        label: "1st Inner Item -3",
-      },
-    ],
-  },
-  {
-    label: "Item -2",
-    menuItems: [
-      {
-        label: "2nd Inner Item -1",
-      },
-      {
-        label: "2nd Inner Item -2",
-      },
-      {
-        label: "2nd Inner Item -3",
-      },
-    ],
-  },
-  {
-    label: "Item -3",
-  },
-  {
-    label: "Item -4",
-  },
-];
+import { menuItems } from "@conatants/popover";
+// import { getDateMinusYears, getDatePlusYears } from "./constants/datepicker";
+// import CustomDatePicker from "custom-date-selector";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -100,23 +20,31 @@ function App() {
     setOpen(false);
     elementRef.current = null;
   }, []);
-  const [value, setValue] = useState("");
+  // const [value, setValue] = useState("");
 
   return (
     <div className="container">
       <button onClick={handleOpen}>Click Here</button>
+      <button
+        onClick={() => {
+          console.log("clicked");
+        }}
+      >
+        second
+      </button>
       <Popover
         open={open}
         elementRef={elementRef}
         onClose={handleClose}
         menuItems={menuItems}
+        handleMenuClick={(props) => console.log(props)}
       />
-      <CustomDatePicker
+      {/* <CustomDatePicker
         value={value}
         setValue={setValue}
         minDate={getDateMinusYears(1)}
         maxDate={getDatePlusYears(2)}
-      />
+      /> */}
     </div>
   );
 }
