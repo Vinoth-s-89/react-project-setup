@@ -1,0 +1,22 @@
+.resizable {
+  border: 1px solid #333;
+  position: relative;
+  resize: both;
+  overflow: hidden;
+  min-height: 300px;
+  min-width: 300px;
+}
+
+.resizable::-webkit-resizer {
+  display: none;
+  cursor: n-resize;
+}
+
+.resize {
+  height: 100%;
+  width: 0px;
+  position: absolute;
+  border: 2px solid transparent;
+  right: 0;
+  cursor: ew-resize;
+}
