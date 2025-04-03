@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../../styles/InputOTP.css";
 
 const regex = {
@@ -8,8 +8,8 @@ const regex = {
 };
 
 const InputOTP = ({ length = 6, type = "number" }) => {
-  const [otp, setOtp] = React.useState(Array(length).fill(""));
-  const optpRef = React.useRef([]);
+  const [otp, setOtp] = useState(Array(length).fill(""));
+  const optpRef = useRef([]);
 
   const moveCusorToEnd = (index) => {
     requestAnimationFrame(() => {
