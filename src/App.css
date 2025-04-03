@@ -3,6 +3,6 @@
   width: 100vw;
   display: flex;
   gap: 20px;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
 }
