@@ -4,7 +4,9 @@ import "./App.css";
 // import { menuItems } from "@conatants/popover";
 // import { getDateMinusYears, getDatePlusYears } from "./constants/datepicker";
 // import CustomDatePicker from "custom-date-selector";
-import InputOTP from "@shared/InputOTP";
+// import InputOTP from "@shared/InputOTP";
+import NestedCheckBox from "@shared/NestedCheckBox";
+import { checkboxOptions } from "./constants/common";
 
 function App() {
   // const [open, setOpen] = useState(false);
@@ -46,7 +48,8 @@ function App() {
         minDate={getDateMinusYears(1)}
         maxDate={getDatePlusYears(2)}
       /> */}
-      <InputOTP />
+      {/* <InputOTP /> */}
+      <NestedCheckBox inputOptions={checkboxOptions} />
     </div>
   );
 }
