@@ -54,6 +54,15 @@ export const checkboxOptions = [
   },
 ];
 
+const checkAndUncheckChild = (options = [], checked) =>
+  options.map((option) => {
+    if (option?.options?.length > 0) {
+      option.options = checkAndUncheckChild(option.options, checked);
+    }
+    option.checked = checked;
+    return option;
+  });
+
 export const updateCheckboxOption = (options, path) => {
   const indices = path.slice(1).split("-");
   let index = 0;
@@ -61,13 +70,13 @@ export const updateCheckboxOption = (options, path) => {
     return innerOptions.map((option, i) => {
       if (i === Number(indices[index])) {
         index++;
-        const updatedOption = { ...option };
         if (index < indices.length) {
-          updatedOption.options = recursiveUpdate(option.options || []);
+          option.options = recursiveUpdate(option.options || []);
         } else {
-          updatedOption.checked = !option.checked;
+          option.checked = !option.checked;
+          option.options = checkAndUncheckChild(option.options, option.checked);
         }
-        return updatedOption;
+        return option;
       }
       return option;
     });
