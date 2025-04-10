@@ -63,14 +63,14 @@ const checkAndUncheckChild = (options = [], checked) =>
     return option;
   });
 
-const checkChildern = (options = []) => {
+const checkChildren = (options = []) => {
   let allChecked = true,
     anyChecked = false;
 
   options.forEach((option) => {
     if (option?.options?.length > 0) {
       const { allChecked: childAllChecked, anyChecked: childAnyChecked } =
-        checkChildern(option.options);
+        checkChildren(option.options);
       allChecked = allChecked && childAllChecked;
       anyChecked = anyChecked || childAnyChecked;
     }
@@ -93,7 +93,7 @@ export const updateCheckboxOption = (options, path) => {
         index++;
         if (index < indices.length) {
           option.options = recursiveUpdate(option.options || []);
-          const { allChecked, anyChecked } = checkChildern(option.options);
+          const { allChecked, anyChecked } = checkChildren(option.options);
           option.checked = allChecked;
           if (!anyChecked && option.checked) {
             option.checked = false;
