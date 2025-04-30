@@ -4,8 +4,18 @@ import { updateCheckboxOption } from "../../constants/common";
 
 const NestedCheckBox = ({ inputOptions = [] }) => {
   const [checkboxOptions, setCheckboxOptions] = useState(inputOptions);
+  const [expanded, setExpanded] = useState({});
   const handleCheck = (path) => {
     setCheckboxOptions(updateCheckboxOption([...checkboxOptions], path));
+  };
+
+  const handleExpand = (event, path) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setExpanded((prev) => ({
+      ...prev,
+      [path]: !prev[path],
+    }));
   };
 
   const getCheckBoxItems = (options, parentIndex = "") => {
@@ -18,6 +28,14 @@ const NestedCheckBox = ({ inputOptions = [] }) => {
               className="nested-checkbox-item"
               style={{ marginLeft: `${parentIndex.split("-").length * 20}px` }}
             >
+              {nestedOptions?.length > 0 && (
+                <div
+                  className="expand-icon"
+                  onClick={(e) => handleExpand(e, `${parentIndex}-${index}`)}
+                >
+                  {expanded[`${parentIndex}-${index}`] ? "-" : "+"}
+                </div>
+              )}
               <input
                 type="checkbox"
                 id={`option-${parentIndex + index}`}
@@ -27,11 +45,17 @@ const NestedCheckBox = ({ inputOptions = [] }) => {
               />
               {label}
             </label>
-            {nestedOptions && nestedOptions.length > 0 && (
-              <div className="nested-checkbox-sub-container">
-                {getCheckBoxItems(nestedOptions, `${parentIndex}-${index}`)}
-              </div>
-            )}
+            <div
+              className={`nested-checkbox-sub-outer-container ${
+                expanded[`${parentIndex}-${index}`] ? "open" : ""
+              }`}
+            >
+              {nestedOptions && nestedOptions.length > 0 && (
+                <div className="nested-checkbox-sub-container">
+                  {getCheckBoxItems(nestedOptions, `${parentIndex}-${index}`)}
+                </div>
+              )}
+            </div>
           </React.Fragment>
         );
       }

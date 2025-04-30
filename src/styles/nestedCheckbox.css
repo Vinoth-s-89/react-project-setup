@@ -1,7 +1,16 @@
-.nested-checkbox-container {
-  display: flex;
-  gap: 5px;
-  flex-direction: column;
+.nested-checkbox-sub-container {
+  overflow-y: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.nested-checkbox-sub-outer-container {
+  display: grid;
+  grid-template-rows: 0fr;
+}
+
+.nested-checkbox-sub-outer-container.open {
+  grid-template-rows: 1fr;
 }
 
 .nested-checkbox-item {
@@ -17,4 +26,13 @@
   width: 15px;
   accent-color: #000;
   cursor: pointer;
+}
+
+.expand-icon {
+  font-size: 16px;
+  padding: 0px 4px;
+}
+
+.expand-icon:hover {
+  background-color: #ededed;
 }
