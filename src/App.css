@@ -15,6 +15,7 @@
   display: grid;
   grid-template-columns: 150px 1fr;
   grid-template-rows: 40px 1fr;
+  transition: grid-template-columns 0.3s ease-in-out;
 }
 
 .app-bar {
@@ -41,4 +42,11 @@
   flex-direction: column;
   gap: 20px;
   padding: 20px 40px;
+}
+
+@media (max-width: 600px) {
+  .App {
+    grid-template-columns: 0px 1fr;
+    grid-template-rows: 40px 1fr;
+  }
 }
