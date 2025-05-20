@@ -1,4 +1,4 @@
-export const filesAndFolders = {
+export const filesAndFoldersContants = {
   type: "parent-folder",
   name: "React Project Setup",
   items: [
@@ -41,7 +41,7 @@ export const filesAndFolders = {
           name: "App.css",
         },
         {
-          type: "file",
+          type: "folder",
           name: "components",
           items: [
             {

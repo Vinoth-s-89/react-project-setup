@@ -1,15 +1,60 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { icons } from "../../constants/icons";
 import "../../styles/fileexplorer.css";
+import { filesAndFoldersContants } from "../../constants/filesAndFolders";
 
 const FileExplorer = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [filesAndFolders, setFilesAndFolders] = useState(
+    filesAndFoldersContants
+  );
+  const { isExpanded = false, items = [] } = filesAndFolders;
+
+  const renderFilesAndFolders = (
+    items,
+    parentIndex = "",
+    parentWidth = 100
+  ) => {
+    return items.map((item, index) => {
+      if (item.type === "folder") {
+        return (
+          <React.Fragment key={parentIndex + index}>
+            <div className="folder" style={{ width: `${parentWidth}%` }}>
+              <div
+                className={`expand-icon ${item.isExpanded ? "expanded" : ""}`}
+              >
+                {icons["arrow-right"]}
+              </div>
+              <div className="folder-icon">{icons.folder}</div>
+              <div className="folder-name">{item.name}</div>
+            </div>
+            {item.items &&
+              renderFilesAndFolders(item.items, index, parentWidth - 20)}
+          </React.Fragment>
+        );
+      } else if (item.type === "file") {
+        return (
+          <div
+            key={parentIndex + index}
+            className="file"
+            style={{ width: `${parentWidth}%` }}
+          >
+            <div className="expand-icon"></div>
+            <div className="file-icon">{icons.file}</div>
+            <div className="file-name">{item.name}</div>
+          </div>
+        );
+      }
+      return null;
+    });
+  };
   return (
     <div className="app-container">
       <div className={`explorer-container ${isExpanded ? "expanded" : ""}`}>
         <div
           className="parent-container"
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={() =>
+            setFilesAndFolders({ ...filesAndFolders, isExpanded: !isExpanded })
+          }
         >
           <div className={`expand-icon ${isExpanded ? "expanded" : ""}`}>
             {icons["arrow-right"]}
@@ -24,7 +69,7 @@ const FileExplorer = () => {
             {icons.minimize}
           </div>
         </div>
-        <div className="files-and-folders"></div>
+        <div className="files-and-folders">{renderFilesAndFolders(items)}</div>
       </div>
     </div>
   );
