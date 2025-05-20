@@ -5,6 +5,7 @@ export const filesAndFoldersContants = {
     {
       type: "folder",
       name: "public",
+      // isExpanded: true,
       items: [
         {
           type: "file",
@@ -28,18 +29,6 @@ export const filesAndFoldersContants = {
       type: "folder",
       name: "src",
       items: [
-        {
-          type: "file",
-          name: "index.js",
-        },
-        {
-          type: "file",
-          name: "App.js",
-        },
-        {
-          type: "file",
-          name: "App.css",
-        },
         {
           type: "folder",
           name: "components",
@@ -67,6 +56,18 @@ export const filesAndFoldersContants = {
               name: "RadioFile.js",
             },
           ],
+        },
+        {
+          type: "file",
+          name: "index.js",
+        },
+        {
+          type: "file",
+          name: "App.js",
+        },
+        {
+          type: "file",
+          name: "App.css",
         },
       ],
     },

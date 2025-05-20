@@ -12,13 +12,13 @@ const FileExplorer = () => {
   const renderFilesAndFolders = (
     items,
     parentIndex = "",
-    parentWidth = 100
+    parentWidth = 290
   ) => {
     return items.map((item, index) => {
       if (item.type === "folder") {
         return (
           <React.Fragment key={parentIndex + index}>
-            <div className="folder" style={{ width: `${parentWidth}%` }}>
+            <div className="folder" style={{ width: `${parentWidth}px` }}>
               <div
                 className={`expand-icon ${item.isExpanded ? "expanded" : ""}`}
               >
@@ -27,8 +27,14 @@ const FileExplorer = () => {
               <div className="folder-icon">{icons.folder}</div>
               <div className="folder-name">{item.name}</div>
             </div>
-            {item.items &&
-              renderFilesAndFolders(item.items, index, parentWidth - 20)}
+            <div
+              className={`nested-folder ${item.isExpanded ? "expanded" : ""}`}
+            >
+              <div>
+                {item.items &&
+                  renderFilesAndFolders(item.items, index, parentWidth - 10)}
+              </div>
+            </div>
           </React.Fragment>
         );
       } else if (item.type === "file") {
@@ -36,7 +42,7 @@ const FileExplorer = () => {
           <div
             key={parentIndex + index}
             className="file"
-            style={{ width: `${parentWidth}%` }}
+            style={{ width: `${parentWidth}px` }}
           >
             <div className="expand-icon"></div>
             <div className="file-icon">{icons.file}</div>

@@ -11,7 +11,7 @@
   border-right: 1px solid #333;
   display: grid;
   grid-template-rows: auto 0fr;
-  transition: grid-template-rows 0.2s linear;
+  transition: grid-template-rows 0.1s linear;
 }
 
 .explorer-container.expanded {
@@ -84,6 +84,9 @@
 .files-and-folders {
   padding: 5px 10px;
   overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .folder,
@@ -94,4 +97,23 @@
   justify-content: center;
   gap: 5px;
   cursor: pointer;
+}
+
+.folder:hover,
+.file:hover {
+  background-color: #393939;
+  border-radius: 3px;
+}
+
+.nested-folder {
+  display: grid;
+  grid-template-rows: 0fr;
+}
+
+.nested-folder div {
+  overflow: hidden;
+}
+
+.nested-folder.expanded {
+  grid-template-rows: auto 1fr;
 }
