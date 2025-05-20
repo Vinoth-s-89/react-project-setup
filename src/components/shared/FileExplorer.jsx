@@ -6,18 +6,12 @@ const FileExplorer = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div className="app-container">
-      <div
-        className="explorer-container"
-        style={{ gridTemplateRows: isExpanded ? "auto 1fr" : "auto 0fr" }}
-      >
+      <div className={`explorer-container ${isExpanded ? "expanded" : ""}`}>
         <div
           className="parent-container"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <div
-            className="expand-icon"
-            style={{ rotate: isExpanded ? "90deg" : "0deg" }}
-          >
+          <div className={`expand-icon ${isExpanded ? "expanded" : ""}`}>
             {icons["arrow-right"]}
           </div>
           <div className="parent-folder-name">
