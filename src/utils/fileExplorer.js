@@ -16,8 +16,11 @@ export const expandAndCollapse = (path, items) => {
   return recursiveUpdate(items, path);
 };
 
-export const addNewItem = (items = [], newItem = {}, path) => {
+export const addNewItem = (items = [], newItem = {}, path, whoSelected) => {
   let index = 0;
+  if (whoSelected === "file") {
+    path = path.slice(0, -1);
+  }
   if (path.length === 0) {
     items.push(newItem);
     return items;

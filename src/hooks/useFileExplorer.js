@@ -16,18 +16,20 @@ export const useFieleExplorer = () => {
     isFieldEnabled: false,
     name: "",
     type: "",
+    whoSelected: "",
   });
   const inputRef = useRef(null);
 
   const { isExpanded = false, items = [] } = filesAndFolders;
-  const { mode, selectedPath, isFieldEnabled, name, type } = selectInfo;
+  const { mode, selectedPath, isFieldEnabled, name, type, whoSelected } =
+    selectInfo;
 
   const handleExpandCollapse = (path) => {
     setFilesAndFolders({
       ...filesAndFolders,
       items: expandAndCollapse(path, [...items]),
     });
-    handleSelect(path);
+    handleSelect(path, "folder");
   };
 
   const handleCollapseAll = (event) => {
@@ -49,7 +51,12 @@ export const useFieleExplorer = () => {
       event.preventDefault();
       setFilesAndFolders({
         ...filesAndFolders,
-        items: addNewItem([...items], { name, type }, selectedPath),
+        items: addNewItem(
+          [...items],
+          { name, type },
+          selectedPath,
+          whoSelected
+        ),
       });
       setSelectInfo({
         ...selectInfo,
@@ -65,7 +72,7 @@ export const useFieleExplorer = () => {
     setSelectInfo({ ...selectInfo, name: event.target.value });
   };
 
-  const handleSelect = (selectedPath) => {
+  const handleSelect = (selectedPath, whoSelected) => {
     setSelectInfo({
       ...selectInfo,
       selectedPath,
@@ -73,6 +80,7 @@ export const useFieleExplorer = () => {
       name: "",
       mode: "",
       type: "",
+      whoSelected,
     });
   };
 
@@ -110,5 +118,6 @@ export const useFieleExplorer = () => {
     handleNameChange,
     inputRef,
     handleAddNewItem,
+    whoSelected,
   };
 };

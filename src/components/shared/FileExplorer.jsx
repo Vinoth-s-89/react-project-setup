@@ -18,6 +18,7 @@ const FileExplorer = () => {
     handleNameChange,
     inputRef,
     handleAddNewItem,
+    whoSelected,
   } = useFieleExplorer();
 
   const renderFilesAndFolders = (
@@ -30,6 +31,7 @@ const FileExplorer = () => {
         // .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         .map((item, index) => {
           let path = parentIndex.concat(index);
+          let filePath = whoSelected === "file" ? path.slice(0, 1) : path;
           if (item.type === "folder") {
             return (
               <React.Fragment key={path}>
@@ -58,7 +60,7 @@ const FileExplorer = () => {
                   <div className="nested-container">
                     {isFieldEnabled &&
                       mode === "new" &&
-                      selectedPath == path && (
+                      selectedPath == filePath && (
                         <input
                           type="text"
                           className="name-input-field"
@@ -78,7 +80,7 @@ const FileExplorer = () => {
             return (
               <div
                 key={path}
-                onClick={() => handleSelect(path)}
+                onClick={() => handleSelect(path, "file")}
                 className={`file ${selectedPath === path ? "selected" : ""}`}
                 style={{ width: `${parentWidth}px` }}
               >
