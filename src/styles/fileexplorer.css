@@ -114,6 +114,14 @@
   background-color: #0e6ff6;
 }
 
+.name-input-field {
+  outline: none;
+  border-color: #0e6ff6;
+  border-radius: 3px;
+  background-color: #393939;
+  color: #fff;
+}
+
 .nested-folder {
   display: grid;
   grid-template-rows: 0fr;

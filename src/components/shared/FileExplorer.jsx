@@ -13,7 +13,10 @@ const FileExplorer = () => {
     setFilesAndFolders,
     handleSelect,
     selectedPath,
-    handleNewClick,
+    isFieldEnabled,
+    mode,
+    handleNameChange,
+    inputRef,
   } = useFieleExplorer();
 
   const renderFilesAndFolders = (
@@ -46,6 +49,15 @@ const FileExplorer = () => {
               className={`nested-folder ${item.isExpanded ? "expanded" : ""}`}
             >
               <div className="nested-container">
+                {isFieldEnabled && mode === "new" && selectedPath == path && (
+                  <input
+                    type="text"
+                    className="name-input-field"
+                    style={{ width: `${parentWidth - 30}px` }}
+                    onChange={handleNameChange}
+                    ref={inputRef}
+                  />
+                )}
                 {item.items &&
                   renderFilesAndFolders(item.items, path, parentWidth - 10)}
               </div>
@@ -84,8 +96,20 @@ const FileExplorer = () => {
           </div>
           <div className="parent-folder-name">{filesAndFolders.name}</div>
           <div className="icons-container">
-            <div onClick={handleNewClick}>{icons.newfile}</div>
-            <div onClick={handleNewClick}>{icons.newfolder}</div>
+            <div
+              onClick={(event) =>
+                handleNew({ event, mode: "new", type: "file" })
+              }
+            >
+              {icons.newfile}
+            </div>
+            <div
+              onClick={(event) =>
+                handleNew({ event, mode: "new", type: "folder" })
+              }
+            >
+              {icons.newfolder}
+            </div>
             <div onClick={handleNew}>{icons.refresh}</div>
             <div onClick={handleCollapseAll}>{icons.minimize}</div>
           </div>

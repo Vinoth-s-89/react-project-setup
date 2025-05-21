@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { filesAndFoldersContants } from "../constants/filesAndFolders";
 import { collapseAll, expandAndCollapse } from "../utils/fileExplorer";
 
@@ -6,9 +6,17 @@ export const useFieleExplorer = () => {
   const [filesAndFolders, setFilesAndFolders] = useState(
     filesAndFoldersContants
   );
+  const [selectInfo, setSelectInfo] = useState({
+    mode: "",
+    selectedPath: null,
+    isFieldEnabled: false,
+    name: "",
+    type: "",
+  });
+  const inputRef = useRef(null);
+
   const { isExpanded = false, items = [] } = filesAndFolders;
-  const [selectedPath, setSelectedPath] = useState("");
-  const [mode, setMode] = useState("");
+  const { mode, selectedPath, isFieldEnabled } = selectInfo;
 
   const handleExpandCollapse = (path) => {
     setFilesAndFolders({
@@ -22,16 +30,48 @@ export const useFieleExplorer = () => {
     setFilesAndFolders({ ...filesAndFolders, items: collapseAll([...items]) });
   };
 
-  const handleNewClick = (event) => {
+  const handleNew = ({ event, type, mode }) => {
     event.stopPropagation();
-    setMode("new");
+    // handleExpandCollapse(selectedPath);
+    setSelectInfo({ ...selectInfo, isFieldEnabled: true, type, mode });
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   };
 
-  const handleNew = ({ type, name }) => {};
-
-  const handleSelect = (path) => {
-    setSelectedPath(path);
+  const handleNameChange = (event) => {
+    setSelectInfo({ ...selectInfo, name: event.target.value });
   };
+
+  const handleSelect = (selectedPath) => {
+    setSelectInfo({
+      ...selectInfo,
+      selectedPath,
+      isFieldEnabled: false,
+      name: "",
+      mode: "",
+      type: "",
+    });
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (inputRef.current && !inputRef.current.contains(event.target)) {
+        setSelectInfo({
+          ...selectInfo,
+          isFieldEnabled: false,
+          name: "",
+          mode: "",
+          type: "",
+        });
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [selectInfo]);
 
   return {
     filesAndFolders,
@@ -43,7 +83,9 @@ export const useFieleExplorer = () => {
     setFilesAndFolders,
     handleSelect,
     selectedPath,
-    handleNewClick,
     mode,
+    isFieldEnabled,
+    handleNameChange,
+    inputRef,
   };
 };
