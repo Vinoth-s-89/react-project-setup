@@ -1,7 +1,5 @@
 export const expandAndCollapse = (path, items) => {
   let index = 0;
-  console.log(path);
-
   const recursiveUpdate = (items, path) => {
     return items.map((item, i) => {
       if (i === Number(path[index])) {
@@ -11,12 +9,33 @@ export const expandAndCollapse = (path, items) => {
         } else {
           item.isExpanded = !item.isExpanded;
         }
-        return item;
       }
       return item;
     });
   };
   return recursiveUpdate(items, path);
+};
+
+export const addNewItem = (items = [], newItem = {}, path) => {
+  let index = 0;
+  if (path.length === 0) {
+    items.push(newItem);
+    return items;
+  }
+  const recursiveAdd = (items, path) => {
+    return items.map((item, i) => {
+      if (i === Number(path[index])) {
+        index++;
+        if (index < path.length) {
+          item.items = recursiveAdd(item.items, path);
+        } else {
+          item.items.push(newItem);
+        }
+      }
+      return item;
+    });
+  };
+  return recursiveAdd(items, path);
 };
 
 export const collapseAll = (items = []) =>

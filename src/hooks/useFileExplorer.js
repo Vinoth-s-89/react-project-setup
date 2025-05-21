@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { filesAndFoldersContants } from "../constants/filesAndFolders";
-import { collapseAll, expandAndCollapse } from "../utils/fileExplorer";
+import {
+  addNewItem,
+  collapseAll,
+  expandAndCollapse,
+} from "../utils/fileExplorer";
 
 export const useFieleExplorer = () => {
   const [filesAndFolders, setFilesAndFolders] = useState(
@@ -16,13 +20,14 @@ export const useFieleExplorer = () => {
   const inputRef = useRef(null);
 
   const { isExpanded = false, items = [] } = filesAndFolders;
-  const { mode, selectedPath, isFieldEnabled } = selectInfo;
+  const { mode, selectedPath, isFieldEnabled, name, type } = selectInfo;
 
   const handleExpandCollapse = (path) => {
     setFilesAndFolders({
       ...filesAndFolders,
       items: expandAndCollapse(path, [...items]),
     });
+    handleSelect(path);
   };
 
   const handleCollapseAll = (event) => {
@@ -37,6 +42,23 @@ export const useFieleExplorer = () => {
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
+  };
+
+  const handleAddNewItem = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      setFilesAndFolders({
+        ...filesAndFolders,
+        items: addNewItem([...items], { name, type }, selectedPath),
+      });
+      setSelectInfo({
+        ...selectInfo,
+        isFieldEnabled: false,
+        name: "",
+        mode: "",
+        type: "",
+      });
+    }
   };
 
   const handleNameChange = (event) => {
@@ -87,5 +109,6 @@ export const useFieleExplorer = () => {
     isFieldEnabled,
     handleNameChange,
     inputRef,
+    handleAddNewItem,
   };
 };

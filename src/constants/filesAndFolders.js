@@ -58,6 +58,10 @@ export const filesAndFoldersContants = {
               type: "file",
               name: "RadioFile.js",
             },
+            {
+              type: "folder",
+              name: "Datas",
+            },
           ],
         },
         {

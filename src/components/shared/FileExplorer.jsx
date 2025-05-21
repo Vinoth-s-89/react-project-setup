@@ -17,69 +17,80 @@ const FileExplorer = () => {
     mode,
     handleNameChange,
     inputRef,
+    handleAddNewItem,
   } = useFieleExplorer();
 
   const renderFilesAndFolders = (
-    items,
+    items = [],
     parentIndex = "",
     parentWidth = 290
   ) => {
-    return items.map((item, index) => {
-      let path = parentIndex.concat(index);
-      if (item.type === "folder") {
-        return (
-          <React.Fragment key={path}>
-            <div
-              className={`folder ${selectedPath === path ? "selected" : ""}`}
-              style={{ width: `${parentWidth}px` }}
-              onClick={() => {
-                handleExpandCollapse(path);
-                handleSelect(path);
-              }}
-            >
+    return (
+      items
+        // .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+        .map((item, index) => {
+          let path = parentIndex.concat(index);
+          if (item.type === "folder") {
+            return (
+              <React.Fragment key={path}>
+                <div
+                  className={`folder ${
+                    selectedPath === path ? "selected" : ""
+                  }`}
+                  style={{ width: `${parentWidth}px` }}
+                  onClick={() => handleExpandCollapse(path)}
+                >
+                  <div
+                    className={`expand-icon ${
+                      item.isExpanded ? "expanded" : ""
+                    }`}
+                  >
+                    {icons["arrow-right"]}
+                  </div>
+                  <div className="folder-icon">{icons.folder}</div>
+                  <div className="folder-name">{item.name}</div>
+                </div>
+                <div
+                  className={`nested-folder ${
+                    item.isExpanded ? "expanded" : ""
+                  }`}
+                >
+                  <div className="nested-container">
+                    {isFieldEnabled &&
+                      mode === "new" &&
+                      selectedPath == path && (
+                        <input
+                          type="text"
+                          className="name-input-field"
+                          style={{ width: `${parentWidth - 30}px` }}
+                          onChange={handleNameChange}
+                          ref={inputRef}
+                          onKeyUp={handleAddNewItem}
+                        />
+                      )}
+                    {item.items &&
+                      renderFilesAndFolders(item.items, path, parentWidth - 10)}
+                  </div>
+                </div>
+              </React.Fragment>
+            );
+          } else if (item.type === "file") {
+            return (
               <div
-                className={`expand-icon ${item.isExpanded ? "expanded" : ""}`}
+                key={path}
+                onClick={() => handleSelect(path)}
+                className={`file ${selectedPath === path ? "selected" : ""}`}
+                style={{ width: `${parentWidth}px` }}
               >
-                {icons["arrow-right"]}
+                <div className="expand-icon"></div>
+                <div className="file-icon">{icons.file}</div>
+                <div className="file-name">{item.name}</div>
               </div>
-              <div className="folder-icon">{icons.folder}</div>
-              <div className="folder-name">{item.name}</div>
-            </div>
-            <div
-              className={`nested-folder ${item.isExpanded ? "expanded" : ""}`}
-            >
-              <div className="nested-container">
-                {isFieldEnabled && mode === "new" && selectedPath == path && (
-                  <input
-                    type="text"
-                    className="name-input-field"
-                    style={{ width: `${parentWidth - 30}px` }}
-                    onChange={handleNameChange}
-                    ref={inputRef}
-                  />
-                )}
-                {item.items &&
-                  renderFilesAndFolders(item.items, path, parentWidth - 10)}
-              </div>
-            </div>
-          </React.Fragment>
-        );
-      } else if (item.type === "file") {
-        return (
-          <div
-            key={path}
-            onClick={() => handleSelect(path)}
-            className={`file ${selectedPath === path ? "selected" : ""}`}
-            style={{ width: `${parentWidth}px` }}
-          >
-            <div className="expand-icon"></div>
-            <div className="file-icon">{icons.file}</div>
-            <div className="file-name">{item.name}</div>
-          </div>
-        );
-      }
-      return null;
-    });
+            );
+          }
+          return null;
+        })
+    );
   };
 
   return (
