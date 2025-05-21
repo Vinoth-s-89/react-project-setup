@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { icons } from "../../constants/icons";
+import { useFieleExplorer } from "../../hooks/useFileExplorer";
 import "../../styles/fileexplorer.css";
-import { filesAndFoldersContants } from "../../constants/filesAndFolders";
-
 const FileExplorer = () => {
-  const [filesAndFolders, setFilesAndFolders] = useState(
-    filesAndFoldersContants
-  );
-  const { isExpanded = false, items = [] } = filesAndFolders;
+  const {
+    filesAndFolders,
+    handleCollapseAll,
+    handleExpandCollapse,
+    handleNew,
+    isExpanded,
+    items,
+    setFilesAndFolders,
+    handleSelect,
+    selectedPath,
+    handleNewClick,
+  } = useFieleExplorer();
 
   const renderFilesAndFolders = (
     items,
@@ -15,10 +22,18 @@ const FileExplorer = () => {
     parentWidth = 290
   ) => {
     return items.map((item, index) => {
+      let path = parentIndex.concat(index);
       if (item.type === "folder") {
         return (
-          <React.Fragment key={parentIndex + index}>
-            <div className="folder" style={{ width: `${parentWidth}px` }}>
+          <React.Fragment key={path}>
+            <div
+              className={`folder ${selectedPath === path ? "selected" : ""}`}
+              style={{ width: `${parentWidth}px` }}
+              onClick={() => {
+                handleExpandCollapse(path);
+                handleSelect(path);
+              }}
+            >
               <div
                 className={`expand-icon ${item.isExpanded ? "expanded" : ""}`}
               >
@@ -30,9 +45,9 @@ const FileExplorer = () => {
             <div
               className={`nested-folder ${item.isExpanded ? "expanded" : ""}`}
             >
-              <div>
+              <div className="nested-container">
                 {item.items &&
-                  renderFilesAndFolders(item.items, index, parentWidth - 10)}
+                  renderFilesAndFolders(item.items, path, parentWidth - 10)}
               </div>
             </div>
           </React.Fragment>
@@ -40,8 +55,9 @@ const FileExplorer = () => {
       } else if (item.type === "file") {
         return (
           <div
-            key={parentIndex + index}
-            className="file"
+            key={path}
+            onClick={() => handleSelect(path)}
+            className={`file ${selectedPath === path ? "selected" : ""}`}
             style={{ width: `${parentWidth}px` }}
           >
             <div className="expand-icon"></div>
@@ -53,6 +69,7 @@ const FileExplorer = () => {
       return null;
     });
   };
+
   return (
     <div className="app-container">
       <div className={`explorer-container ${isExpanded ? "expanded" : ""}`}>
@@ -65,14 +82,12 @@ const FileExplorer = () => {
           <div className={`expand-icon ${isExpanded ? "expanded" : ""}`}>
             {icons["arrow-right"]}
           </div>
-          <div className="parent-folder-name">
-            File Explorer File Explorer File Explorer File Explorer
-          </div>
+          <div className="parent-folder-name">{filesAndFolders.name}</div>
           <div className="icons-container">
-            {icons.newfile}
-            {icons.newfolder}
-            {icons.refresh}
-            {icons.minimize}
+            <div onClick={handleNewClick}>{icons.newfile}</div>
+            <div onClick={handleNewClick}>{icons.newfolder}</div>
+            <div onClick={handleNew}>{icons.refresh}</div>
+            <div onClick={handleCollapseAll}>{icons.minimize}</div>
           </div>
         </div>
         <div className="files-and-folders">{renderFilesAndFolders(items)}</div>

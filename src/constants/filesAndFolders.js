@@ -28,10 +28,12 @@ export const filesAndFoldersContants = {
     {
       type: "folder",
       name: "src",
+      // isExpanded: true,
       items: [
         {
           type: "folder",
           name: "components",
+          // isExpanded: true,
           items: [
             {
               type: "file",
@@ -46,6 +48,7 @@ export const filesAndFoldersContants = {
         {
           type: "folder",
           name: "shared",
+          // isExpanded: true,
           items: [
             {
               type: "file",
@@ -57,6 +60,52 @@ export const filesAndFoldersContants = {
             },
           ],
         },
+        {
+          type: "folder",
+          name: "hooks",
+          // isExpanded: true,
+          items: [
+            {
+              type: "file",
+              name: "useForm.js",
+            },
+            {
+              type: "file",
+              name: "useFetch.js",
+            },
+            {
+              type: "folder",
+              name: "context",
+              // isExpanded: true,
+              items: [
+                {
+                  type: "file",
+                  name: "AuthContext.js",
+                },
+                {
+                  type: "file",
+                  name: "ThemeContext.js",
+                },
+                {
+                  type: "folder",
+                  name: "reducers",
+                  // isExpanded: true,
+                  items: [
+                    {
+                      type: "file",
+                      name: "authReducer.js",
+                    },
+                    {
+                      type: "file",
+                      name: "themeReducer.js",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+
         {
           type: "file",
           name: "index.js",

@@ -36,7 +36,6 @@
   font-weight: 500;
   color: #fff;
   text-transform: uppercase;
-  flex: 1;
   letter-spacing: 0.5px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -97,6 +96,11 @@
   justify-content: center;
   gap: 5px;
   cursor: pointer;
+  border-radius: 3px;
+}
+
+.file {
+  grid-template-columns: 15px 20px 1fr;
 }
 
 .folder:hover,
@@ -105,15 +109,38 @@
   border-radius: 3px;
 }
 
+.folder.selected,
+.file.selected {
+  background-color: #0e6ff6;
+}
+
 .nested-folder {
   display: grid;
   grid-template-rows: 0fr;
 }
 
-.nested-folder div {
+.nested-container {
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .nested-folder.expanded {
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 1fr;
+  width: max-content;
+}
+
+.folder-name,
+.file-name {
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.folder-name {
+  padding-top: 1px;
 }
