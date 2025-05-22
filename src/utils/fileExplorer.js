@@ -36,6 +36,7 @@ export const addNewItem = (items = [], newItem = {}, path, whoSelected) => {
             item.items = [];
           }
           item.items.push(newItem);
+          item.items = sortItems(item.items);
         }
       }
       return item;
@@ -54,3 +55,21 @@ export const collapseAll = (items = []) =>
     }
     return item;
   });
+
+export function sortItems(items) {
+  if (!items || !Array.isArray(items)) return [];
+
+  return items
+    .map((item) => {
+      if (item.type === "folder" && item.items) {
+        return { ...item, items: sortItems(item.items) };
+      }
+      return item;
+    })
+    .sort((a, b) => {
+      if (a.type !== b.type) {
+        return a.type === "folder" ? -1 : 1;
+      }
+      return a.name.localeCompare(b.name);
+    });
+}

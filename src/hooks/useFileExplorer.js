@@ -4,12 +4,11 @@ import {
   addNewItem,
   collapseAll,
   expandAndCollapse,
+  sortItems,
 } from "../utils/fileExplorer";
 
 export const useFieleExplorer = () => {
-  const [filesAndFolders, setFilesAndFolders] = useState(
-    filesAndFoldersContants
-  );
+  const [filesAndFolders, setFilesAndFolders] = useState({});
   const [selectInfo, setSelectInfo] = useState({
     mode: "",
     selectedPath: null,
@@ -85,7 +84,14 @@ export const useFieleExplorer = () => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    setFilesAndFolders({
+      ...filesAndFoldersContants,
+      items: sortItems(filesAndFoldersContants.items),
+    });
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = () => {
       // if (inputRef.current && !inputRef.current.contains(event.target)) {
       setSelectInfo({
         mode: "",
