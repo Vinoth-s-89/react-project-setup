@@ -1,4 +1,4 @@
-export const expandAndCollapse = (path, items) => {
+export const expandAndCollapse = (path, items, isExpanded) => {
   let index = 0;
   const recursiveUpdate = (items, path) => {
     return items.map((item, i) => {
@@ -7,7 +7,7 @@ export const expandAndCollapse = (path, items) => {
         if (index < path.length) {
           item.items = recursiveUpdate(item.items || [], path);
         } else {
-          item.isExpanded = !item.isExpanded;
+          item.isExpanded = isExpanded || !item.isExpanded;
         }
       }
       return item;

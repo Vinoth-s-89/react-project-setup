@@ -24,10 +24,10 @@ export const useFieleExplorer = () => {
   const { mode, selectedPath, isFieldEnabled, name, type, whoSelected } =
     selectInfo;
 
-  const handleExpandCollapse = (path) => {
+  const handleExpandCollapse = (path, isExpanded) => {
     setFilesAndFolders({
       ...filesAndFolders,
-      items: expandAndCollapse(path, [...items]),
+      items: expandAndCollapse(path, [...items], isExpanded),
     });
     handleSelect(path, "folder");
   };
@@ -39,7 +39,7 @@ export const useFieleExplorer = () => {
 
   const handleNew = ({ event, type, mode }) => {
     event.stopPropagation();
-    // handleExpandCollapse(selectedPath);
+    handleExpandCollapse(selectedPath, true);
     setSelectInfo({ ...selectInfo, isFieldEnabled: true, type, mode });
     setTimeout(() => {
       inputRef.current?.focus();

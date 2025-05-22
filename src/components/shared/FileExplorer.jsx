@@ -109,24 +109,26 @@ const FileExplorer = () => {
             {icons["arrow-right"]}
           </div>
           <div className="parent-folder-name">{filesAndFolders.name}</div>
-          <div className="icons-container">
-            <div
-              onClick={(event) =>
-                handleNew({ event, mode: "new", type: "file" })
-              }
-            >
-              {icons.newfile}
+          {isExpanded && (
+            <div className="icons-container">
+              <div
+                onClick={(event) =>
+                  handleNew({ event, mode: "new", type: "file" })
+                }
+              >
+                {icons.newfile}
+              </div>
+              <div
+                onClick={(event) =>
+                  handleNew({ event, mode: "new", type: "folder" })
+                }
+              >
+                {icons.newfolder}
+              </div>
+              <div onClick={handleNew}>{icons.refresh}</div>
+              <div onClick={handleCollapseAll}>{icons.minimize}</div>
             </div>
-            <div
-              onClick={(event) =>
-                handleNew({ event, mode: "new", type: "folder" })
-              }
-            >
-              {icons.newfolder}
-            </div>
-            <div onClick={handleNew}>{icons.refresh}</div>
-            <div onClick={handleCollapseAll}>{icons.minimize}</div>
-          </div>
+          )}
         </div>
         <div className="files-and-folders">{renderFilesAndFolders(items)}</div>
       </div>
