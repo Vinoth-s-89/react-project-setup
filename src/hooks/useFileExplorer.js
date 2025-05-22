@@ -39,7 +39,7 @@ export const useFieleExplorer = () => {
 
   const handleNew = ({ event, type, mode }) => {
     event.stopPropagation();
-    handleExpandCollapse(selectedPath, true);
+    if (selectedPath) handleExpandCollapse(selectedPath, true);
     setSelectInfo({ ...selectInfo, isFieldEnabled: true, type, mode });
     setTimeout(() => {
       inputRef.current?.focus();
@@ -86,15 +86,16 @@ export const useFieleExplorer = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (inputRef.current && !inputRef.current.contains(event.target)) {
-        setSelectInfo({
-          ...selectInfo,
-          isFieldEnabled: false,
-          name: "",
-          mode: "",
-          type: "",
-        });
-      }
+      // if (inputRef.current && !inputRef.current.contains(event.target)) {
+      setSelectInfo({
+        mode: "",
+        selectedPath: null,
+        isFieldEnabled: false,
+        name: "",
+        type: "",
+        whoSelected: "",
+      });
+      // }
     };
     document.addEventListener("click", handleClickOutside);
 
@@ -119,5 +120,6 @@ export const useFieleExplorer = () => {
     inputRef,
     handleAddNewItem,
     whoSelected,
+    type,
   };
 };

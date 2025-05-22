@@ -18,12 +18,12 @@ export const expandAndCollapse = (path, items, isExpanded) => {
 
 export const addNewItem = (items = [], newItem = {}, path, whoSelected) => {
   let index = 0;
-  if (whoSelected === "file") {
-    path = path.slice(0, -1);
-  }
-  if (path.length === 0) {
+  if (!path?.length) {
     items.push(newItem);
     return items;
+  }
+  if (whoSelected === "file") {
+    path = path.slice(0, -1);
   }
   const recursiveAdd = (items, path) => {
     return items.map((item, i) => {

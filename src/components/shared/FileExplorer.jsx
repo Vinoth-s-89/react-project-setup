@@ -19,6 +19,7 @@ const FileExplorer = () => {
     inputRef,
     handleAddNewItem,
     whoSelected,
+    type,
   } = useFieleExplorer();
 
   const renderFilesAndFolders = (
@@ -41,7 +42,10 @@ const FileExplorer = () => {
                     selectedPath === path ? "selected" : ""
                   }`}
                   style={{ width: `${parentWidth}px` }}
-                  onClick={() => handleExpandCollapse(path)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleExpandCollapse(path);
+                  }}
                 >
                   <div
                     className={`expand-icon ${
@@ -62,14 +66,17 @@ const FileExplorer = () => {
                     {isFieldEnabled &&
                       mode === "new" &&
                       newFilePath == path && (
-                        <input
-                          type="text"
-                          className="name-input-field"
-                          style={{ width: `${parentWidth - 30}px` }}
-                          onChange={handleNameChange}
-                          ref={inputRef}
-                          onKeyUp={handleAddNewItem}
-                        />
+                        <div className="new-field-container">
+                          <div className={`${type}-icon`}>{icons[type]}</div>
+                          <input
+                            type="text"
+                            className="name-input-field"
+                            style={{ width: `${parentWidth - 40}px` }}
+                            onChange={handleNameChange}
+                            ref={inputRef}
+                            onKeyUp={handleAddNewItem}
+                          />
+                        </div>
                       )}
                     {item.items &&
                       renderFilesAndFolders(item.items, path, parentWidth - 10)}
@@ -81,7 +88,10 @@ const FileExplorer = () => {
             return (
               <div
                 key={path}
-                onClick={() => handleSelect(path, "file")}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleSelect(path, "file");
+                }}
                 className={`file ${selectedPath === path ? "selected" : ""}`}
                 style={{ width: `${parentWidth}px` }}
               >
@@ -130,7 +140,23 @@ const FileExplorer = () => {
             </div>
           )}
         </div>
-        <div className="files-and-folders">{renderFilesAndFolders(items)}</div>
+        <div className="files-and-folders">
+          {isFieldEnabled && mode === "new" && !selectedPath && (
+            <div className="new-field-container" style={{ width: "100%" }}>
+              <div className={`${type}-icon`}>{icons[type]}</div>
+              {isFieldEnabled && mode === "new" && !selectedPath && (
+                <input
+                  type="text"
+                  className="name-input-field"
+                  onChange={handleNameChange}
+                  ref={inputRef}
+                  onKeyUp={handleAddNewItem}
+                />
+              )}
+            </div>
+          )}
+          {renderFilesAndFolders(items)}
+        </div>
       </div>
     </div>
   );

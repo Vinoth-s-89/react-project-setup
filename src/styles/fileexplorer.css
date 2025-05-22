@@ -152,3 +152,11 @@
 .folder-name {
   padding-top: 1px;
 }
+
+.new-field-container {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  align-content: center;
+  gap: 2px;
+  justify-content: center;
+}
