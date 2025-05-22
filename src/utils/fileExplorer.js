@@ -32,6 +32,9 @@ export const addNewItem = (items = [], newItem = {}, path, whoSelected) => {
         if (index < path.length) {
           item.items = recursiveAdd(item.items, path);
         } else {
+          if (!item.items) {
+            item.items = [];
+          }
           item.items.push(newItem);
         }
       }

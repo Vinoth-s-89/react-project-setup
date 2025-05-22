@@ -31,7 +31,8 @@ const FileExplorer = () => {
         // .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         .map((item, index) => {
           let path = parentIndex.concat(index);
-          let filePath = whoSelected === "file" ? path.slice(0, 1) : path;
+          let newFilePath =
+            whoSelected === "file" ? selectedPath.slice(0, -1) : selectedPath;
           if (item.type === "folder") {
             return (
               <React.Fragment key={path}>
@@ -60,7 +61,7 @@ const FileExplorer = () => {
                   <div className="nested-container">
                     {isFieldEnabled &&
                       mode === "new" &&
-                      selectedPath == filePath && (
+                      newFilePath == path && (
                         <input
                           type="text"
                           className="name-input-field"
