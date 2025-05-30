@@ -122,6 +122,10 @@
   color: #fff;
 }
 
+.name-input-field.duplicate {
+  border-color: red;
+}
+
 .nested-folder {
   display: grid;
   grid-template-rows: 0fr;

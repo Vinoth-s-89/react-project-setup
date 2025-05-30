@@ -20,6 +20,7 @@ const FileExplorer = () => {
     handleAddNewItem,
     whoSelected,
     type,
+    hasDuplicate,
   } = useFieleExplorer();
 
   const renderFilesAndFolders = (
@@ -70,7 +71,9 @@ const FileExplorer = () => {
                           <div className={`${type}-icon`}>{icons[type]}</div>
                           <input
                             type="text"
-                            className="name-input-field"
+                            className={`name-input-field ${
+                              hasDuplicate ? "duplicate" : ""
+                            }`}
                             style={{ width: `${parentWidth - 40}px` }}
                             onChange={handleNameChange}
                             ref={inputRef}
@@ -147,7 +150,9 @@ const FileExplorer = () => {
               {isFieldEnabled && mode === "new" && !selectedPath && (
                 <input
                   type="text"
-                  className="name-input-field"
+                  className={`name-input-field ${
+                    hasDuplicate ? "duplicate" : ""
+                  }`}
                   onChange={handleNameChange}
                   ref={inputRef}
                   onKeyUp={handleAddNewItem}

@@ -16,12 +16,20 @@ export const useFieleExplorer = () => {
     name: "",
     type: "",
     whoSelected: "",
+    hasDuplicate: false,
   });
   const inputRef = useRef(null);
 
   const { isExpanded = false, items = [] } = filesAndFolders;
-  const { mode, selectedPath, isFieldEnabled, name, type, whoSelected } =
-    selectInfo;
+  const {
+    mode,
+    selectedPath,
+    isFieldEnabled,
+    name,
+    type,
+    whoSelected,
+    hasDuplicate,
+  } = selectInfo;
 
   const handleExpandCollapse = (path, isExpanded) => {
     setFilesAndFolders({
@@ -46,6 +54,7 @@ export const useFieleExplorer = () => {
   };
 
   const handleAddNewItem = (event) => {
+    let duplicate = { hasDuplicate: false };
     if (event.key === "Enter") {
       event.preventDefault();
       setFilesAndFolders({
@@ -54,16 +63,21 @@ export const useFieleExplorer = () => {
           [...items],
           { name, type },
           selectedPath,
-          whoSelected
+          whoSelected,
+          duplicate
         ),
       });
-      setSelectInfo({
-        ...selectInfo,
-        isFieldEnabled: false,
-        name: "",
-        mode: "",
-        type: "",
-      });
+      setSelectInfo(
+        duplicate.hasDuplicate
+          ? { ...selectInfo, hasDuplicate: duplicate.hasDuplicate }
+          : {
+              ...selectInfo,
+              isFieldEnabled: false,
+              name: "",
+              mode: "",
+              type: "",
+            }
+      );
     }
   };
 
@@ -92,7 +106,6 @@ export const useFieleExplorer = () => {
 
   useEffect(() => {
     const handleClickOutside = () => {
-      // if (inputRef.current && !inputRef.current.contains(event.target)) {
       setSelectInfo({
         mode: "",
         selectedPath: null,
@@ -101,7 +114,6 @@ export const useFieleExplorer = () => {
         type: "",
         whoSelected: "",
       });
-      // }
     };
     document.addEventListener("click", handleClickOutside);
 
@@ -127,5 +139,6 @@ export const useFieleExplorer = () => {
     handleAddNewItem,
     whoSelected,
     type,
+    hasDuplicate,
   };
 };
