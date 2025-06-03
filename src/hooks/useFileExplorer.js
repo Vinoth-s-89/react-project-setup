@@ -20,7 +20,6 @@ export const useFieleExplorer = () => {
     hasDuplicate: false,
   });
   const inputRef = useRef(null);
-  const duplicateRef = useRef(null);
 
   const { isExpanded = false, items = [] } = filesAndFolders;
   const {
