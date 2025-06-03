@@ -28,85 +28,79 @@ const FileExplorer = () => {
     parentIndex = "",
     parentWidth = 290
   ) => {
-    return (
-      items
-        // .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-        .map((item, index) => {
-          let path = parentIndex.concat(index);
-          let newFilePath =
-            whoSelected === "file" ? selectedPath.slice(0, -1) : selectedPath;
-          if (item.type === "folder") {
-            return (
-              <React.Fragment key={path}>
-                <div
-                  className={`folder ${
-                    selectedPath === path ? "selected" : ""
-                  }`}
-                  style={{ width: `${parentWidth}px` }}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleExpandCollapse(path);
-                  }}
-                >
-                  <div
-                    className={`expand-icon ${
-                      item.isExpanded ? "expanded" : ""
-                    }`}
-                  >
-                    {icons["arrow-right"]}
-                  </div>
-                  <div className="folder-icon">{icons.folder}</div>
-                  <div className="folder-name">{item.name}</div>
-                </div>
-                <div
-                  className={`nested-folder ${
-                    item.isExpanded ? "expanded" : ""
-                  }`}
-                >
-                  <div className="nested-container">
-                    {isFieldEnabled &&
-                      mode === "new" &&
-                      newFilePath == path && (
-                        <div className="new-field-container">
-                          <div className={`${type}-icon`}>{icons[type]}</div>
-                          <input
-                            type="text"
-                            className={`name-input-field ${
-                              hasDuplicate ? "duplicate" : ""
-                            }`}
-                            style={{ width: `${parentWidth - 40}px` }}
-                            onChange={handleNameChange}
-                            ref={inputRef}
-                            onKeyUp={handleAddNewItem}
-                          />
-                        </div>
-                      )}
-                    {item.items &&
-                      renderFilesAndFolders(item.items, path, parentWidth - 10)}
-                  </div>
-                </div>
-              </React.Fragment>
-            );
-          } else if (item.type === "file") {
-            return (
+    return items.map((item, index) => {
+      let path = parentIndex.concat(index);
+      let newFilePath =
+        whoSelected === "file" ? selectedPath.slice(0, -1) : selectedPath;
+      if (item.type === "folder") {
+        return (
+          <React.Fragment key={path}>
+            <div
+              className={`folder ${selectedPath === path ? "selected" : ""}`}
+              style={{ width: `${parentWidth}px` }}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleExpandCollapse(path);
+              }}
+            >
               <div
-                key={path}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  handleSelect(path, "file");
-                }}
-                className={`file ${selectedPath === path ? "selected" : ""}`}
-                style={{ width: `${parentWidth}px` }}
+                className={`expand-icon ${item.isExpanded ? "expanded" : ""}`}
               >
-                <div className="expand-icon"></div>
-                <div className="file-icon">{icons.file}</div>
-                <div className="file-name">{item.name}</div>
+                {icons["arrow-right"]}
               </div>
-            );
-          }
-          return null;
-        })
-    );
+              <div className="folder-icon">{icons.folder}</div>
+              <div className="folder-name">{item.name}</div>
+            </div>
+            <div
+              className={`nested-folder ${item.isExpanded ? "expanded" : ""}`}
+            >
+              <div className="nested-container">
+                {isFieldEnabled && mode === "new" && newFilePath == path && (
+                  <div className="new-field-container">
+                    <div className={`${type}-icon`}>{icons[type]}</div>
+                    <input
+                      type="text"
+                      className={`name-input-field ${
+                        hasDuplicate ? "duplicate" : ""
+                      }`}
+                      style={{ width: `${parentWidth - 40}px` }}
+                      onChange={(event) => handleNameChange(event, item.items)}
+                      ref={inputRef}
+                      onKeyUp={handleAddNewItem}
+                    />
+                    <div
+                      className={`dupliacte-info ${hasDuplicate ? "show" : ""}`}
+                    >
+                      A {type} already exist at this location. Please choose a
+                      different name.
+                    </div>
+                  </div>
+                )}
+                {item.items &&
+                  renderFilesAndFolders(item.items, path, parentWidth - 10)}
+              </div>
+            </div>
+          </React.Fragment>
+        );
+      } else if (item.type === "file") {
+        return (
+          <div
+            key={path}
+            onClick={(event) => {
+              event.stopPropagation();
+              handleSelect(path, "file");
+            }}
+            className={`file ${selectedPath === path ? "selected" : ""}`}
+            style={{ width: `${parentWidth}px` }}
+          >
+            <div className="expand-icon"></div>
+            <div className="file-icon">{icons.file}</div>
+            <div className="file-name">{item.name}</div>
+          </div>
+        );
+      }
+      return null;
+    });
   };
 
   return (
@@ -138,7 +132,9 @@ const FileExplorer = () => {
               >
                 {icons.newfolder}
               </div>
-              <div onClick={handleNew}>{icons.refresh}</div>
+              <div onClick={(event) => handleNew({ event })}>
+                {icons.refresh}
+              </div>
               <div onClick={handleCollapseAll}>{icons.minimize}</div>
             </div>
           )}

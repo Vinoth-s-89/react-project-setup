@@ -4,6 +4,7 @@ import {
   addNewItem,
   collapseAll,
   expandAndCollapse,
+  findDuplicate,
   sortItems,
 } from "../utils/fileExplorer";
 
@@ -19,6 +20,7 @@ export const useFieleExplorer = () => {
     hasDuplicate: false,
   });
   const inputRef = useRef(null);
+  const duplicateRef = useRef(null);
 
   const { isExpanded = false, items = [] } = filesAndFolders;
   const {
@@ -44,7 +46,7 @@ export const useFieleExplorer = () => {
     setFilesAndFolders({ ...filesAndFolders, items: collapseAll([...items]) });
   };
 
-  const handleNew = ({ event, type, mode }) => {
+  const handleNew = ({ event, type = "", mode = "" }) => {
     event.stopPropagation();
     if (selectedPath) handleExpandCollapse(selectedPath, true);
     setSelectInfo({ ...selectInfo, isFieldEnabled: true, type, mode });
@@ -54,8 +56,7 @@ export const useFieleExplorer = () => {
   };
 
   const handleAddNewItem = (event) => {
-    let duplicate = { hasDuplicate: false };
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !hasDuplicate) {
       event.preventDefault();
       setFilesAndFolders({
         ...filesAndFolders,
@@ -63,26 +64,27 @@ export const useFieleExplorer = () => {
           [...items],
           { name, type },
           selectedPath,
-          whoSelected,
-          duplicate
+          whoSelected
         ),
       });
-      setSelectInfo(
-        duplicate.hasDuplicate
-          ? { ...selectInfo, hasDuplicate: duplicate.hasDuplicate }
-          : {
-              ...selectInfo,
-              isFieldEnabled: false,
-              name: "",
-              mode: "",
-              type: "",
-            }
-      );
+      setSelectInfo({
+        ...selectInfo,
+        isFieldEnabled: false,
+        name: "",
+        mode: "",
+        type: "",
+        hasDuplicate: false,
+      });
     }
   };
 
-  const handleNameChange = (event) => {
-    setSelectInfo({ ...selectInfo, name: event.target.value });
+  const handleNameChange = (event, items) => {
+    const name = event.target.value.trim();
+    setSelectInfo({
+      ...selectInfo,
+      name,
+      hasDuplicate: findDuplicate({ name, type }, items),
+    });
   };
 
   const handleSelect = (selectedPath, whoSelected) => {
