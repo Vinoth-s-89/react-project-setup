@@ -44,6 +44,7 @@
 
 .expand-icon {
   transition: rotate 0.1s linear;
+  transform: translate(0px, 2px);
 }
 
 .expand-icon.expanded {
@@ -78,6 +79,11 @@
 .folder-icon svg,
 .file-icon svg {
   fill: #f0f0f0;
+}
+
+.folder-icon,
+.file-icon {
+  transform: translate(0px, 2px);
 }
 
 .files-and-folders {
@@ -155,6 +161,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  user-select: none;
 }
 
 .folder-name {

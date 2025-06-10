@@ -10,6 +10,7 @@ import {
 
 export const useFieleExplorer = () => {
   const [filesAndFolders, setFilesAndFolders] = useState({});
+  const [open, setOpen] = useState(false);
   const [selectInfo, setSelectInfo] = useState({
     mode: "",
     selectedPath: null,
@@ -21,6 +22,7 @@ export const useFieleExplorer = () => {
     position: {},
   });
   const inputRef = useRef(null);
+  const elementRef = useRef(null);
 
   const { isExpanded = false, items = [] } = filesAndFolders;
   const {
@@ -107,6 +109,18 @@ export const useFieleExplorer = () => {
     });
   };
 
+  const onOpen = (event) => {
+    elementRef.current = event.currentTarget;
+    event.stopPropagation();
+    event.preventDefault();
+    setOpen(!open);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+    elementRef.current = null;
+  };
+
   useEffect(() => {
     if (inputRef.current) {
       setSelectInfo((prev) => ({
@@ -141,24 +155,25 @@ export const useFieleExplorer = () => {
     }
   }, [filesAndFolders.isExpanded]);
 
-  useEffect(() => {
-    const handleClickOutside = () => {
-      setSelectInfo({
-        mode: "",
-        selectedPath: null,
-        isFieldEnabled: false,
-        name: "",
-        type: "",
-        whoSelected: "",
-        position: {},
-      });
-    };
-    document.addEventListener("click", handleClickOutside);
+  // useEffect(() => {
+  //   const handleClickOutside = () => {
+  //     console.log("outside");
+  //     setSelectInfo({
+  //       mode: "",
+  //       selectedPath: null,
+  //       isFieldEnabled: false,
+  //       name: "",
+  //       type: "",
+  //       whoSelected: "",
+  //       position: {},
+  //     });
+  //   };
+  //   document.addEventListener("click", handleClickOutside);
 
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [selectInfo]);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside);
+  //   };
+  // }, [selectInfo]);
 
   return {
     filesAndFolders,
@@ -180,5 +195,9 @@ export const useFieleExplorer = () => {
     hasDuplicate,
     position,
     name,
+    open,
+    onOpen,
+    onClose,
+    elementRef,
   };
 };

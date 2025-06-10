@@ -2,6 +2,9 @@ import React from "react";
 import { icons } from "../../constants/icons";
 import { useFieleExplorer } from "../../hooks/useFileExplorer";
 import "../../styles/fileexplorer.css";
+import { NewFieldContainer, ParentContainer } from "./FileExplorerComponents";
+import Popover from "./Popover";
+import { fileMenuItems } from "../../constants/filesAndFolders";
 const FileExplorer = () => {
   const {
     filesAndFolders,
@@ -23,6 +26,10 @@ const FileExplorer = () => {
     hasDuplicate,
     position,
     name,
+    elementRef,
+    open,
+    onOpen,
+    onClose,
   } = useFieleExplorer();
 
   const renderFilesAndFolders = (
@@ -44,7 +51,14 @@ const FileExplorer = () => {
                 event.stopPropagation();
                 handleExpandCollapse(path);
               }}
+              onContextMenu={onOpen}
             >
+              <Popover
+                open={open}
+                elementRef={elementRef}
+                onClose={onClose}
+                menuItems={fileMenuItems}
+              />
               <div
                 className={`expand-icon ${item.isExpanded ? "expanded" : ""}`}
               >
@@ -58,30 +72,17 @@ const FileExplorer = () => {
             >
               <div className="nested-container">
                 {isFieldEnabled && mode === "new" && newFilePath == path && (
-                  <div className="new-field-container">
-                    <div className={`${type}-icon`}>{icons[type]}</div>
-                    <input
-                      type="text"
-                      className={`name-input-field ${
-                        hasDuplicate ? "duplicate" : ""
-                      }`}
-                      style={{ width: `${parentWidth - 40}px` }}
-                      onChange={(event) => handleNameChange(event, item.items)}
-                      ref={inputRef}
-                      onKeyUp={handleAddNewItem}
-                    />
-                    <div
-                      className={`dupliacte-info ${hasDuplicate ? "show" : ""}`}
-                      style={{
-                        width: `${parentWidth - 30}px`,
-                        left: position.x,
-                        top: position.y,
-                      }}
-                    >
-                      A {type} name {name} already exist at this location.
-                      Please choose a different name.
-                    </div>
-                  </div>
+                  <NewFieldContainer
+                    handleAddNewItem={handleAddNewItem}
+                    handleNameChange={handleNameChange}
+                    hasDuplicate={hasDuplicate}
+                    inputRef={inputRef}
+                    type={type}
+                    parentWidth={parentWidth}
+                    name={name}
+                    position={position}
+                    items={item.items}
+                  />
                 )}
                 {item.items &&
                   renderFilesAndFolders(item.items, path, parentWidth - 10)}
@@ -113,55 +114,26 @@ const FileExplorer = () => {
   return (
     <div className="app-container">
       <div className={`explorer-container ${isExpanded ? "expanded" : ""}`}>
-        <div
-          className="parent-container"
-          onClick={() =>
-            setFilesAndFolders({ ...filesAndFolders, isExpanded: !isExpanded })
-          }
-        >
-          <div className={`expand-icon ${isExpanded ? "expanded" : ""}`}>
-            {icons["arrow-right"]}
-          </div>
-          <div className="parent-folder-name">{filesAndFolders.name}</div>
-          {isExpanded && (
-            <div className="icons-container">
-              <div
-                onClick={(event) =>
-                  handleNew({ event, mode: "new", type: "file" })
-                }
-              >
-                {icons.newfile}
-              </div>
-              <div
-                onClick={(event) =>
-                  handleNew({ event, mode: "new", type: "folder" })
-                }
-              >
-                {icons.newfolder}
-              </div>
-              <div onClick={(event) => handleNew({ event })}>
-                {icons.refresh}
-              </div>
-              <div onClick={handleCollapseAll}>{icons.minimize}</div>
-            </div>
-          )}
-        </div>
+        <ParentContainer
+          filesAndFolders={filesAndFolders}
+          handleCollapseAll={handleCollapseAll}
+          handleNew={handleNew}
+          isExpanded={isExpanded}
+          setFilesAndFolders={setFilesAndFolders}
+        />
         <div className="files-and-folders">
           {isFieldEnabled && mode === "new" && !selectedPath && (
-            <div className="new-field-container" style={{ width: "100%" }}>
-              <div className={`${type}-icon`}>{icons[type]}</div>
-              {isFieldEnabled && mode === "new" && !selectedPath && (
-                <input
-                  type="text"
-                  className={`name-input-field ${
-                    hasDuplicate ? "duplicate" : ""
-                  }`}
-                  onChange={handleNameChange}
-                  ref={inputRef}
-                  onKeyUp={handleAddNewItem}
-                />
-              )}
-            </div>
+            <NewFieldContainer
+              handleAddNewItem={handleAddNewItem}
+              handleNameChange={handleNameChange}
+              inputRef={inputRef}
+              hasDuplicate={hasDuplicate}
+              name={name}
+              type={type}
+              position={position}
+              items={items}
+              style={{ width: "100%" }}
+            />
           )}
           {renderFilesAndFolders(items)}
         </div>

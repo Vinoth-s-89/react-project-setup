@@ -134,3 +134,12 @@ export const filesAndFoldersContants = {
     },
   ],
 };
+
+export const fileMenuItems = [
+  {
+    label: "Rename",
+  },
+  {
+    label: "Delete",
+  },
+];

@@ -9,7 +9,6 @@ const Popover = ({
   menuItems = [],
   parentIndex = "",
   zIndex = 5,
-  handleMenuClick,
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [innerProps, setInnerProps] = useState({
@@ -22,8 +21,8 @@ const Popover = ({
 
   const handleInnerMenuOpen = (event, menuItems, index, props) => {
     event.stopPropagation();
+    if (props?.onClick) props.onClick(event);
     if (!menuItems) {
-      if (handleMenuClick) handleMenuClick(props);
       onClose();
       return;
     }
@@ -116,9 +115,13 @@ const Popover = ({
               <div
                 key={label + index}
                 className="menu-item"
-                onClick={(e) =>
-                  handleInnerMenuOpen(e, innerMenus, index, props)
-                }
+                onClick={(e) => {
+                  handleInnerMenuOpen(e, innerMenus, index, props);
+                }}
+                style={{
+                  gridTemplateColumns:
+                    !innerMenus && !icon ? "1fr" : "28px 1fr auto",
+                }}
               >
                 {icon && (
                   <div className="menu-icon" style={iconStyles}>
@@ -144,7 +147,6 @@ const Popover = ({
             key={parentIndex}
             parentIndex={innerProps.parentIndex}
             zIndex={zIndex + 5}
-            handleMenuClick={handleMenuClick}
           />
         )}
       </div>
