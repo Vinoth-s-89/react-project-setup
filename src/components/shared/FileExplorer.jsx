@@ -21,6 +21,8 @@ const FileExplorer = () => {
     whoSelected,
     type,
     hasDuplicate,
+    position,
+    name,
   } = useFieleExplorer();
 
   const renderFilesAndFolders = (
@@ -70,9 +72,14 @@ const FileExplorer = () => {
                     />
                     <div
                       className={`dupliacte-info ${hasDuplicate ? "show" : ""}`}
+                      style={{
+                        width: `${parentWidth - 30}px`,
+                        left: position.x,
+                        top: position.y,
+                      }}
                     >
-                      A {type} already exist at this location. Please choose a
-                      different name.
+                      A {type} name {name} already exist at this location.
+                      Please choose a different name.
                     </div>
                   </div>
                 )}

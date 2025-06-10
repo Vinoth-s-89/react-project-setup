@@ -127,7 +127,7 @@
 }
 
 .name-input-field.duplicate {
-  border-color: red;
+  border-color: #cb1805;
 }
 
 .nested-folder {
@@ -171,4 +171,15 @@
 
 .dupliacte-info {
   position: fixed;
+  display: none;
+  background-color: rgb(123, 13, 1);
+  color: #f0f0f0;
+  padding: 2px 5px;
+  font-size: 12px;
+  border: 1px solid #de1802;
+  letter-spacing: 0.3px;
+}
+
+.dupliacte-info.show {
+  display: block;
 }

@@ -18,6 +18,7 @@ export const useFieleExplorer = () => {
     type: "",
     whoSelected: "",
     hasDuplicate: false,
+    position: {},
   });
   const inputRef = useRef(null);
 
@@ -30,6 +31,7 @@ export const useFieleExplorer = () => {
     type,
     whoSelected,
     hasDuplicate,
+    position = {},
   } = selectInfo;
 
   const handleExpandCollapse = (path, isExpanded) => {
@@ -48,7 +50,12 @@ export const useFieleExplorer = () => {
   const handleNew = ({ event, type = "", mode = "" }) => {
     event.stopPropagation();
     if (selectedPath) handleExpandCollapse(selectedPath, true);
-    setSelectInfo({ ...selectInfo, isFieldEnabled: true, type, mode });
+    setSelectInfo({
+      ...selectInfo,
+      isFieldEnabled: true,
+      type,
+      mode,
+    });
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
@@ -73,6 +80,7 @@ export const useFieleExplorer = () => {
         mode: "",
         type: "",
         hasDuplicate: false,
+        position: {},
       });
     }
   };
@@ -95,8 +103,21 @@ export const useFieleExplorer = () => {
       mode: "",
       type: "",
       whoSelected,
+      position: {},
     });
   };
+
+  useEffect(() => {
+    if (inputRef.current) {
+      setSelectInfo((prev) => ({
+        ...prev,
+        position: {
+          x: inputRef.current.offsetLeft,
+          y: inputRef.current.offsetTop + inputRef.current.offsetHeight + 2,
+        },
+      }));
+    }
+  }, [inputRef, selectInfo.mode]);
 
   useEffect(() => {
     setFilesAndFolders({
@@ -104,6 +125,21 @@ export const useFieleExplorer = () => {
       items: sortItems(filesAndFoldersContants.items),
     });
   }, []);
+
+  useEffect(() => {
+    if (!filesAndFolders.isExpanded) {
+      setSelectInfo({
+        mode: "",
+        selectedPath: null,
+        isFieldEnabled: false,
+        name: "",
+        type: "",
+        whoSelected: "",
+        hasDuplicate: false,
+        position: {},
+      });
+    }
+  }, [filesAndFolders.isExpanded]);
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -114,6 +150,7 @@ export const useFieleExplorer = () => {
         name: "",
         type: "",
         whoSelected: "",
+        position: {},
       });
     };
     document.addEventListener("click", handleClickOutside);
@@ -141,5 +178,7 @@ export const useFieleExplorer = () => {
     whoSelected,
     type,
     hasDuplicate,
+    position,
+    name,
   };
 };
