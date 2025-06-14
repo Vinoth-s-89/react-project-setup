@@ -121,6 +121,8 @@ export const useFieleExplorer = () => {
     elementRef.current = null;
   };
 
+  const handleDelete = () => {};
+
   useEffect(() => {
     if (inputRef.current) {
       setSelectInfo((prev) => ({
@@ -155,25 +157,24 @@ export const useFieleExplorer = () => {
     }
   }, [filesAndFolders.isExpanded]);
 
-  // useEffect(() => {
-  //   const handleClickOutside = () => {
-  //     console.log("outside");
-  //     setSelectInfo({
-  //       mode: "",
-  //       selectedPath: null,
-  //       isFieldEnabled: false,
-  //       name: "",
-  //       type: "",
-  //       whoSelected: "",
-  //       position: {},
-  //     });
-  //   };
-  //   document.addEventListener("click", handleClickOutside);
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setSelectInfo({
+        mode: "",
+        selectedPath: null,
+        isFieldEnabled: false,
+        name: "",
+        type: "",
+        whoSelected: "",
+        position: {},
+      });
+    };
+    document.addEventListener("click", handleClickOutside);
 
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutside);
-  //   };
-  // }, [selectInfo]);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [selectInfo]);
 
   return {
     filesAndFolders,

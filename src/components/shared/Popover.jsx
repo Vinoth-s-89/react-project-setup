@@ -52,7 +52,6 @@ const Popover = ({
 
   const handleClickOutside = useCallback(
     (event) => {
-      event.stopPropagation();
       if (popoverRef.current && !popoverRef.current.contains(event.target)) {
         onClose();
       }
@@ -61,9 +60,9 @@ const Popover = ({
   );
 
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [handleClickOutside]);
 

@@ -53,12 +53,6 @@ const FileExplorer = () => {
               }}
               onContextMenu={onOpen}
             >
-              <Popover
-                open={open}
-                elementRef={elementRef}
-                onClose={onClose}
-                menuItems={fileMenuItems}
-              />
               <div
                 className={`expand-icon ${item.isExpanded ? "expanded" : ""}`}
               >
@@ -100,6 +94,7 @@ const FileExplorer = () => {
             }}
             className={`file ${selectedPath === path ? "selected" : ""}`}
             style={{ width: `${parentWidth}px` }}
+            onContextMenu={onOpen}
           >
             <div className="expand-icon"></div>
             <div className="file-icon">{icons.file}</div>
@@ -137,6 +132,13 @@ const FileExplorer = () => {
           )}
           {renderFilesAndFolders(items)}
         </div>
+        <Popover
+          open={open}
+          elementRef={elementRef}
+          onClose={onClose}
+          menuItems={fileMenuItems}
+          parentIndex="in"
+        />
       </div>
     </div>
   );
