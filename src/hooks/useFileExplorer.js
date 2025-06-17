@@ -123,6 +123,32 @@ export const useFieleExplorer = () => {
     }));
   };
 
+  const onDragStart = ({ event, name, type, path }) => {
+    event.dataTransfer.setData("type", type);
+    event.dataTransfer.setData("name", name);
+    event.dataTransfer.setData("path", path);
+  };
+
+  const onDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const onDrop = (event, path) => {
+    event.preventDefault();
+    const type = event.dataTransfer.getData("type");
+    const name = event.dataTransfer.getData("name");
+    const draggedPath = event.dataTransfer.getData("path");
+    if (draggedPath === path) return;
+    setFilesAndFolders((prev) => ({
+      ...prev,
+      items: addNewItem([...items], { name, type }, path, whoSelected),
+    }));
+    setFilesAndFolders((prev) => ({
+      ...prev,
+      items: handleDelete(prev.items, draggedPath),
+    }));
+  };
+
   const onClose = () => {
     setOpen(false);
     elementRef.current = null;
@@ -143,7 +169,11 @@ export const useFieleExplorer = () => {
     },
     {
       label: "Delete",
-      onClick: () => handleDelete([...items], selectedPath),
+      onClick: () =>
+        setFilesAndFolders((prev) => ({
+          ...prev,
+          items: handleDelete(prev.items, selectedPath),
+        })),
     },
   ];
 
@@ -225,5 +255,8 @@ export const useFieleExplorer = () => {
     onClose,
     elementRef,
     fileMenuItems,
+    onDrop,
+    onDragOver,
+    onDragStart,
   };
 };

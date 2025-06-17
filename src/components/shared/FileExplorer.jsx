@@ -30,6 +30,9 @@ const FileExplorer = () => {
     onOpen,
     onClose,
     fileMenuItems,
+    onDragOver,
+    onDrop,
+    onDragStart,
   } = useFieleExplorer();
 
   const renderFilesAndFolders = (
@@ -56,6 +59,12 @@ const FileExplorer = () => {
               onContextMenu={(event) =>
                 onOpen({ event, name: item.name, type: item.type })
               }
+              draggable
+              onDragStart={(event) =>
+                onDragStart({ event, path, type: item.type, name: item.name })
+              }
+              onDragOver={onDragOver}
+              onDrop={(event) => onDrop(event, path)}
             >
               <div
                 className={`expand-icon ${item.isExpanded ? "expanded" : ""}`}
@@ -119,6 +128,12 @@ const FileExplorer = () => {
             onContextMenu={(event) =>
               onOpen({ event, name: item.name, type: item.type })
             }
+            draggable
+            onDragStart={(event) =>
+              onDragStart({ event, path, type: item.type, name: item.name })
+            }
+            onDragOver={onDragOver}
+            onDrop={(event) => onDrop(event, newFilePath)}
           >
             <div className="expand-icon"></div>
             {selectedPath === path && mode === "rename" ? (
