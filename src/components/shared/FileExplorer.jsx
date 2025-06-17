@@ -4,7 +4,6 @@ import { useFieleExplorer } from "../../hooks/useFileExplorer";
 import "../../styles/fileexplorer.css";
 import { NewFieldContainer, ParentContainer } from "./FileExplorerComponents";
 import Popover from "./Popover";
-import { fileMenuItems } from "../../constants/filesAndFolders";
 const FileExplorer = () => {
   const {
     filesAndFolders,
@@ -30,6 +29,7 @@ const FileExplorer = () => {
     open,
     onOpen,
     onClose,
+    fileMenuItems,
   } = useFieleExplorer();
 
   const renderFilesAndFolders = (
@@ -45,27 +45,47 @@ const FileExplorer = () => {
         return (
           <React.Fragment key={path}>
             <div
-              className={`folder ${selectedPath === path ? "selected" : ""}`}
+              className={`folder ${selectedPath === path ? "selected" : ""} ${
+                selectedPath === path && mode === "rename" ? "rename" : ""
+              }`}
               style={{ width: `${parentWidth}px` }}
               onClick={(event) => {
                 event.stopPropagation();
                 handleExpandCollapse(path);
               }}
-              onContextMenu={onOpen}
+              onContextMenu={(event) =>
+                onOpen({ event, name: item.name, type: item.type })
+              }
             >
               <div
                 className={`expand-icon ${item.isExpanded ? "expanded" : ""}`}
               >
                 {icons["arrow-right"]}
               </div>
-              <div className="folder-icon">{icons.folder}</div>
-              <div className="folder-name">{item.name}</div>
+              {selectedPath === path && mode === "rename" ? (
+                <NewFieldContainer
+                  handleAddNewItem={handleAddNewItem}
+                  handleNameChange={handleNameChange}
+                  hasDuplicate={hasDuplicate}
+                  inputRef={inputRef}
+                  type={type}
+                  customWidth={"100%"}
+                  name={name}
+                  position={position}
+                  items={item.items}
+                />
+              ) : (
+                <>
+                  <div className="folder-icon">{icons.folder}</div>
+                  <div className="folder-name">{item.name}</div>
+                </>
+              )}
             </div>
             <div
               className={`nested-folder ${item.isExpanded ? "expanded" : ""}`}
             >
               <div className="nested-container">
-                {isFieldEnabled && mode === "new" && newFilePath == path && (
+                {isFieldEnabled && mode === "new" && newFilePath === path && (
                   <NewFieldContainer
                     handleAddNewItem={handleAddNewItem}
                     handleNameChange={handleNameChange}
@@ -92,13 +112,33 @@ const FileExplorer = () => {
               event.stopPropagation();
               handleSelect(path, "file");
             }}
-            className={`file ${selectedPath === path ? "selected" : ""}`}
+            className={`file ${selectedPath === path ? "selected" : ""} ${
+              selectedPath === path && mode === "rename" ? "rename" : ""
+            }`}
             style={{ width: `${parentWidth}px` }}
-            onContextMenu={onOpen}
+            onContextMenu={(event) =>
+              onOpen({ event, name: item.name, type: item.type })
+            }
           >
             <div className="expand-icon"></div>
-            <div className="file-icon">{icons.file}</div>
-            <div className="file-name">{item.name}</div>
+            {selectedPath === path && mode === "rename" ? (
+              <NewFieldContainer
+                handleAddNewItem={handleAddNewItem}
+                handleNameChange={handleNameChange}
+                hasDuplicate={hasDuplicate}
+                inputRef={inputRef}
+                type={type}
+                name={name}
+                position={position}
+                items={item.items}
+                customWidth={"100%"}
+              />
+            ) : (
+              <>
+                <div className="file-icon">{icons.file}</div>
+                <div className="file-name">{item.name}</div>
+              </>
+            )}
           </div>
         );
       }

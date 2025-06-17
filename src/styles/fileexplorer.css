@@ -105,6 +105,11 @@
   border-radius: 3px;
 }
 
+.folder.rename,
+.file.rename {
+  grid-template-columns: 15px 1fr;
+}
+
 .folder {
   padding: 2px 5px 0px 5px;
 }
@@ -162,6 +167,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   user-select: none;
+  transform: translateY(2px);
 }
 
 .folder-name {
@@ -185,6 +191,7 @@
   font-size: 12px;
   border: 1px solid #de1802;
   letter-spacing: 0.3px;
+  z-index: 1;
 }
 
 .dupliacte-info.show {

@@ -51,6 +51,7 @@ export const NewFieldContainer = ({
   items = [],
   position = {},
   name,
+  customWidth,
 }) => {
   return (
     <div className="new-field-container" style={style}>
@@ -58,7 +59,8 @@ export const NewFieldContainer = ({
       <input
         type="text"
         className={`name-input-field ${hasDuplicate ? "duplicate" : ""}`}
-        style={{ width: `${parentWidth - 40}px` }}
+        style={{ width: customWidth || `${parentWidth - 40}px` }}
+        value={name}
         onChange={(event) => handleNameChange(event, items)}
         ref={inputRef}
         onKeyUp={handleAddNewItem}

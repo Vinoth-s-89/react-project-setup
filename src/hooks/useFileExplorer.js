@@ -5,6 +5,8 @@ import {
   collapseAll,
   expandAndCollapse,
   findDuplicate,
+  handleDelete,
+  renameItem,
   sortItems,
 } from "../utils/fileExplorer";
 
@@ -23,6 +25,8 @@ export const useFieleExplorer = () => {
   });
   const inputRef = useRef(null);
   const elementRef = useRef(null);
+
+  console.log(selectInfo);
 
   const { isExpanded = false, items = [] } = filesAndFolders;
   const {
@@ -68,12 +72,10 @@ export const useFieleExplorer = () => {
       event.preventDefault();
       setFilesAndFolders({
         ...filesAndFolders,
-        items: addNewItem(
-          [...items],
-          { name, type },
-          selectedPath,
-          whoSelected
-        ),
+        items:
+          mode === "rename"
+            ? renameItem([...items], selectedPath, name)
+            : addNewItem([...items], { name, type }, selectedPath, whoSelected),
       });
       setSelectInfo({
         ...selectInfo,
@@ -109,11 +111,16 @@ export const useFieleExplorer = () => {
     });
   };
 
-  const onOpen = (event) => {
+  const onOpen = ({ event, name, type }) => {
     elementRef.current = event.currentTarget;
     event.stopPropagation();
     event.preventDefault();
     setOpen(!open);
+    setSelectInfo((prev) => ({
+      ...prev,
+      name,
+      type,
+    }));
   };
 
   const onClose = () => {
@@ -121,7 +128,24 @@ export const useFieleExplorer = () => {
     elementRef.current = null;
   };
 
-  const handleDelete = () => {};
+  const fileMenuItems = [
+    {
+      label: "Rename",
+      onClick: () => {
+        setSelectInfo((prev) => ({
+          ...prev,
+          mode: "rename",
+        }));
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 0);
+      },
+    },
+    {
+      label: "Delete",
+      onClick: () => handleDelete([...items], selectedPath),
+    },
+  ];
 
   useEffect(() => {
     if (inputRef.current) {
@@ -200,5 +224,6 @@ export const useFieleExplorer = () => {
     onOpen,
     onClose,
     elementRef,
+    fileMenuItems,
   };
 };

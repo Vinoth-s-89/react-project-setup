@@ -16,6 +16,42 @@ export const expandAndCollapse = (path, items, isExpanded) => {
   return recursiveUpdate(items, path);
 };
 
+export const handleDelete = (items = [], path) => {
+  let index = 0;
+  const recursiveDelete = (items, path) => {
+    return items.filter((item, i) => {
+      if (i === Number(path[index])) {
+        index++;
+        if (index < path.length) {
+          item.items = recursiveDelete(item.items || [], path);
+        } else {
+          return false;
+        }
+      }
+      return true;
+    });
+  };
+  return recursiveDelete(items, path);
+};
+
+export const renameItem = (items = [], path, name) => {
+  let index = 0;
+  const recursiveRename = (items, path) => {
+    return items.map((item, i) => {
+      if (i === Number(path[index])) {
+        index++;
+        if (index < path.length) {
+          item.items = recursiveRename(item.items || [], path);
+        } else {
+          item.name = name;
+        }
+      }
+      return item;
+    });
+  };
+  return recursiveRename(items, path);
+};
+
 export const addNewItem = (items = [], newItem = {}, path, whoSelected) => {
   let index = 0;
   if (!path?.length) {
