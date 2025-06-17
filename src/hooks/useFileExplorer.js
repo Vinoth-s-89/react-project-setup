@@ -26,8 +26,6 @@ export const useFieleExplorer = () => {
   const inputRef = useRef(null);
   const elementRef = useRef(null);
 
-  console.log(selectInfo);
-
   const { isExpanded = false, items = [] } = filesAndFolders;
   const {
     mode,
