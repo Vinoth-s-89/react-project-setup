@@ -52,10 +52,18 @@ export const renameItem = (items = [], path, name) => {
   return recursiveRename(items, path);
 };
 
-export const addNewItem = (items = [], newItem = {}, path, whoSelected) => {
+export const addNewItem = (
+  items = [],
+  newItem = {},
+  path,
+  whoSelected,
+  deletePath
+) => {
+  if (deletePath) items = handleDelete(items, deletePath);
   let index = 0;
   if (!path?.length) {
-    items.push(newItem);
+    let index = findIndex(newItem, items);
+    items.splice(index, 0, newItem);
     return items;
   }
   if (whoSelected === "file") {
@@ -69,11 +77,10 @@ export const addNewItem = (items = [], newItem = {}, path, whoSelected) => {
           item.items = recursiveAdd(item.items, path);
         } else {
           if (!item.items) {
-            item.items = [];
-            item.items.push(newItem);
+            item.items = [newItem];
           } else {
-            let { index } = findIndex(newItem, item.items);
-            item.items.splice(index, 0, newItem);
+            let index = findIndex(newItem, item.items);
+            if (index > -1) item.items.splice(index, 0, newItem);
           }
         }
       }
@@ -89,10 +96,12 @@ export const findDuplicate = (newItem, items = []) =>
   );
 
 const findIndex = (newItem, items = []) => {
-  let index = newItem.type === "folder" ? 0 : items.length,
-    hasDuplicate = false;
+  let index = newItem.type === "folder" ? 0 : items.length;
   for (let j = 0; j < items.length; j++) {
     let { name = "", type = "" } = items[j];
+    if (name.localeCompare(newItem.name) === 0) {
+      return -1;
+    }
     if (newItem.type === type && name.localeCompare(newItem.name) > 0) {
       index = j;
       break;
@@ -100,7 +109,7 @@ const findIndex = (newItem, items = []) => {
       index = j + 1;
     }
   }
-  return { hasDuplicate, index };
+  return index;
 };
 
 export const collapseAll = (items = []) =>

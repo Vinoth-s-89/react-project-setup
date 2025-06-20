@@ -136,14 +136,17 @@ export const useFieleExplorer = () => {
     const type = event.dataTransfer.getData("type");
     const name = event.dataTransfer.getData("name");
     const draggedPath = event.dataTransfer.getData("path");
-    if (draggedPath === path) return;
+    if (draggedPath?.slice(0, -1) === path) return;
+    const newItems = addNewItem(
+      [...items],
+      { name, type },
+      path,
+      whoSelected,
+      draggedPath
+    );
     setFilesAndFolders((prev) => ({
       ...prev,
-      items: addNewItem([...items], { name, type }, path, whoSelected),
-    }));
-    setFilesAndFolders((prev) => ({
-      ...prev,
-      items: handleDelete(prev.items, draggedPath),
+      items: newItems,
     }));
   };
 
