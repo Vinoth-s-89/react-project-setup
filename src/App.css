@@ -1,8 +1,14 @@
-/* .container {
+:root {
+  --base-color: hsl(0, 0%, 0%);
+  --text-color: hsl(0, 0%, 100%);
+}
+
+.container {
   height: 100vh;
   width: 100vw;
   display: flex;
   gap: 20px;
   align-items: center;
   justify-content: center;
-} */
+  background-color: var(--base-color);
+}

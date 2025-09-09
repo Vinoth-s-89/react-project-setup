@@ -1,0 +1,86 @@
+.carousel-container {
+  position: relative;
+}
+.carousel {
+  width: 600px;
+  aspect-ratio: 16/9;
+  background-color: hsl(from var(--base-color) h s l);
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 20px;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  width: 24%;
+  aspect-ratio: 1/1;
+  background-color: hsl(from var(--base-color) h s calc(l + 10));
+  color: hsl(from var(--text-color) h s calc(l - 10));
+  border-radius: 10px;
+  border: 1px solid hsl(from var(--base-color) h s calc(l + 40));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.icon-container {
+  cursor: pointer;
+  position: absolute;
+  z-index: 10;
+  padding: 10px;
+  border: 1px solid hsl(from var(--base-color) h s calc(l + 40));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: hsl(from var(--base-color) h s calc(l + 30) / 0.5);
+}
+
+.icon-container.disabled {
+  cursor: not-allowed;
+  background-color: hsl(from var(--base-color) h s calc(l + 30) / 0.4);
+  border-color: hsl(from var(--base-color) h s calc(l + 40) / 0.4);
+}
+
+.icon-container.disabled svg {
+  fill: hsl(from var(--text-color) h s calc(l - 10) / 0.4);
+}
+
+.icon-container.disabled:hover {
+  background-color: hsl(from var(--base-color) h s calc(l + 30) / 0.4);
+  border-color: hsl(from var(--base-color) h s calc(l + 40) / 0.4);
+}
+
+.icon-container:hover {
+  background-color: hsl(from var(--base-color) h s calc(l + 30) / 0.7);
+}
+
+.icon-container:active {
+  background-color: hsl(from var(--base-color) h s calc(l + 30) / 0.8);
+}
+
+.icon-container.left {
+  left: 0px;
+  top: 50%;
+  transform: translate(-45px, -50%);
+}
+
+.icon-container.right {
+  right: 0px;
+  top: 50%;
+  transform: translate(45px, -50%);
+}
+
+.icon-container svg {
+  width: 18px;
+  height: 18px;
+  fill: hsl(from var(--text-color) h s calc(l - 10));
+}

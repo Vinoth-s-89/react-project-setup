@@ -1,5 +1,6 @@
 // import { useCallback, useRef, useState } from "react";
 import "./App.css";
+import Carousel from "./components/shared/Carousel";
 // import Popover from "@shared/Popover";
 // import { menuItems } from "@conatants/popover";
 // import { getDateMinusYears, getDatePlusYears } from "./constants/datepicker";
@@ -8,7 +9,7 @@ import "./App.css";
 // import NestedCheckBox from "@shared/NestedCheckBox";
 // import { checkboxOptions } from "./constants/common";
 // import BasicLayout from "./components/shared/BasicLayout";
-import FileExplorer from "./components/shared/FileExplorer";
+// import FileExplorer from "./components/shared/FileExplorer";
 
 function App() {
   // const [open, setOpen] = useState(false);
@@ -54,7 +55,12 @@ function App() {
       /> */
   }
 
-  return <FileExplorer />;
+  // return <FileExplorer />;
+  return (
+    <div className="container">
+      <Carousel />
+    </div>
+  );
 }
 
 export default App;
